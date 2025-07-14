@@ -12,3 +12,8 @@
 body {
     background-color: var(--c-background);
 }
+
+.ant-menu-item-selected {
+    border-left: 5px #e3905c solid;
+
+}
