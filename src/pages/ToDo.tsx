@@ -1,7 +1,11 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 
 const ToDo = () => {
-  return <div>ToDo</div>;
+  return (
+    <div className="px-2">
+      <Outlet />
+    </div>
+  );
 };
 
 export default ToDo;

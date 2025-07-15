@@ -1,53 +1,70 @@
-import { Button, Input, Tabs } from "antd";
+import { Button, Input } from "antd";
 import {
-  DashboardOutlined,
   SearchOutlined,
   TableOutlined,
+  AppstoreOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
-
+import { NavLink, useLocation } from "react-router-dom";
+import user from "../assets/user.jpg";
 const Header = () => {
+  const location = useLocation();
+  const isTodoPage = location.pathname.startsWith("/todo");
+
   return (
-    <div className=" px-2 py-3">
-      <div className="bg-white rounded-4xl  flex justify-between items-center max-w-7xl mx-auto">
+    <div className="px-2 py-3">
+      <div className="bg-white px-4 py-2 rounded-3xl flex justify-between items-center max-w-7xl mx-auto">
         <div className="w-64">
           <Input
             placeholder="Search..."
             allowClear
             variant="borderless"
-            className="rounded-3xl [&_.ant-input-affix-wrapper]:!bg-input"
-            suffix={null}
+            className="rounded-3xl  [&_.ant-input-affix-wrapper]:!bg-input"
             prefix={<SearchOutlined />}
+            style={{ backgroundColor: "var(--c-background)" }}
           />
         </div>
-        <div className="flex items-center gap-3">
-          <img
-            src="https://via.placeholder.com/24"
-            // alt="User Avatar"
-            width={24}
-            height={24}
-            className="bg-gray-400 rounded-full object-cover"
-          />
-          <p className="userName  font-medium">
-            <span>workspace</span>
-            <br />
-            <span>brazily</span>
-          </p>
+        <div className="flex items-center w-40 gap-4">
+          <BellOutlined style={{ fontSize: "1.2rem" }} />
+          <div className="flex items-center space-x-2">
+            <img src={user} alt="avatar" className="size-8" />
+            <div className="flex flex-col text-[8px]">
+              <p>Workspace</p>
+              <p>brazilyy</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex justify-between items-center  my-4">
-        <Tabs
-          defaultActiveKey="2"
-          items={[DashboardOutlined, TableOutlined].map((Icon, i) => {
-            const id = String(i + 1);
-            return {
-              key: id,
-              children: `Tab ${id}`,
-              icon: <Icon />,
-            };
-          })}
-        />
-        <Button>New Task</Button>
-      </div>
+
+      {isTodoPage && (
+        <div className="flex justify-between items-center my-4 max-w-7xl mx-auto">
+          <div className="flex">
+            <NavLink
+              to="/todo/table-view"
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 rounded-xl ${
+                  isActive ? "bg-[#f2a471] text-white" : "bg-gray-100"
+                }`
+              }
+            >
+              <TableOutlined />
+            </NavLink>
+            <NavLink
+              to="/todo/card-view"
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 rounded-xl ${
+                  isActive ? "bg-[#f2a471] text-white" : "bg-gray-100"
+                }`
+              }
+            >
+              <AppstoreOutlined />
+            </NavLink>
+          </div>
+          <Button type="primary" className="rounded-xl">
+            + New Task
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

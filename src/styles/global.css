@@ -6,7 +6,7 @@
 @theme {
     --color-primary: var(--c-primary);
     --color-background: var(--c-background);
-    --color-input: red;
+    --color-background-dark: var(--c-background-dark);
 }
 
 

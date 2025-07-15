@@ -7,6 +7,8 @@ import History from "./pages/History";
 import Report from "./pages/Report";
 import Settings from "./pages/Settings";
 import ToDo from "./pages/ToDo";
+import TableView from "./components/TableView";
+import CardView from "./components/CardView";
 function App() {
   return (
     <>
@@ -18,7 +20,11 @@ function App() {
             <Route path="/history" element={<History />} />
             <Route path="/report" element={<Report />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/todo" element={<ToDo />} />
+            <Route path="/todo" element={<ToDo />}>
+              <Route index element={<TableView />} />
+              <Route path="table-view" element={<TableView />} />
+              <Route path="card-view" element={<CardView />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
