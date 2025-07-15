@@ -7,6 +7,8 @@
     --color-primary: var(--c-primary);
     --color-background: var(--c-background);
     --color-background-dark: var(--c-background-dark);
+    --color-accent: var(--c-accent);
+    --color-accent-dark: var(--c-accent-dark);
 }
 
 

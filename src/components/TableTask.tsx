@@ -34,7 +34,9 @@ const TableTask = () => {
         </span>
         To Do Name{" "}
         <div className="ms-3">
-          <span>front</span>
+          <span className="text-white text-xs bg-accent-dark rounded-3xl py-1 px-2.5">
+            front
+          </span>
         </div>
       </div>
 
