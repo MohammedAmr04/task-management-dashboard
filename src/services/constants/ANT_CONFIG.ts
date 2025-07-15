@@ -1,4 +1,3 @@
-// src/theme/antdThemeConfig.ts
 import { theme, type ThemeConfig } from "antd";
 import { themeColors } from "./COLORS";
 
@@ -6,8 +5,18 @@ export const lightConfig: ThemeConfig = {
   algorithm: theme.defaultAlgorithm,
   token: {
     colorPrimary: themeColors.lightTheme.primary,
-    colorBgBase: themeColors.lightTheme.background,
     colorTextBase: themeColors.lightTheme.dark,
+  },
+  components: {
+    Menu: {
+      colorBgBase: "#fff",
+    },
+    Layout: {
+      siderBg: "#fff",
+    },
+    Input: {
+      borderRadius: 20,
+    },
   },
 };
 

@@ -5,15 +5,11 @@
 
 @theme {
     --color-primary: var(--c-primary);
-    --color-tahiti: #3ab7bf;
-    --color-bermuda: #78dcca;
+    --color-background: var(--c-background);
+    --color-input: red;
 }
 
-body {
-    background-color: var(--c-background);
-}
 
 .ant-menu-item-selected {
     border-left: 5px #e3905c solid;
-
 }

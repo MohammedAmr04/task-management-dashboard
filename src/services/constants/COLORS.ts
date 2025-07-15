@@ -1,21 +1,21 @@
 export const themeColors = {
   // Light Theme
   lightTheme: {
-    primary: "#f2a471",
-    secondary: "#1890ff ",
-    success: "#52c41a",
-    warning: "#faad14",
+    primary: "#ff9d00",
+    secondary: " #f3f1ef",
+    success: "#1890ff",
+    warning: "#f7d7b3",
     danger: "#ff4d4f",
-    info: "#1677ff",
+    info: "#fefefe",
 
-    background: "#f3f1ef",
+    background: "#f8f7f6",
     light: "#ffffff",
     dark: "#141414",
     muted: "#8c8c8c",
 
-    gray100: "#f5f5f5",
-    gray200: "#d9d9d9",
-    gray300: "#bfbfbf",
+    gray100: "#eaeaea",
+    gray200: "#cccccc",
+    gray300: "#999999",
   },
   // Dark Theme
   darkTheme: {
