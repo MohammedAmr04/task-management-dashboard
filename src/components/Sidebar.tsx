@@ -15,47 +15,66 @@ const { Sider } = Layout;
 const items = [
   {
     key: "dashboard",
-    icon: <DashboardOutlined />,
-    label: "Dashboard",
+    label: (
+      <div className="text-xl flex font-medium ps-3.5 items-center  ">
+        <DashboardOutlined className="me-3.5" style={{ fontSize: "18px" }} />
+        Dashboard
+      </div>
+    ),
     path: "/dashboard",
-    className: "text-xl text-center mb-7 ",
   },
   {
     key: "analytics",
-    icon: <LineChartOutlined />,
-    label: "Analytics",
+    label: (
+      <div className="text-xl flex font-medium ps-3.5 items-center  ">
+        <LineChartOutlined className="me-3.5" style={{ fontSize: "18px" }} />
+        Analytics
+      </div>
+    ),
     path: "/analytics",
-    className: "text-xl mb-7 ",
   },
   {
     key: "history",
-    icon: <HistoryOutlined />,
-    label: "History",
+    label: (
+      <div className="text-xl flex font-medium ps-3.5 items-center ">
+        <HistoryOutlined className="me-3.5" style={{ fontSize: "18px" }} />
+        History
+      </div>
+    ),
     path: "/history",
-    className: "text-xl mb-7 ",
   },
   {
     key: "todo",
-    icon: <CheckSquareOutlined />,
-    label: "To-do",
+    label: (
+      <div className="text-xl flex font-medium ps-3.5 items-center ">
+        <CheckSquareOutlined className="me-3.5" style={{ fontSize: "18px" }} />
+        To-do
+      </div>
+    ),
     path: "/todo",
-    className: "text-xl mb-7",
   },
   {
     key: "report",
-    icon: <FileTextOutlined />,
-    label: "Report",
+    label: (
+      <div className="text-xl flex font-medium ps-3.5  items-center  ">
+        <FileTextOutlined className="me-3.5" style={{ fontSize: "18px" }} />
+        Report
+      </div>
+    ),
     path: "/report",
-    className: "text-xl mb-7",
   },
   {
     key: "settings",
-    icon: <SettingOutlined />,
-    label: "Settings",
+    label: (
+      <div className="text-xl flex font-medium ps-3.5  items-center  ">
+        <SettingOutlined className="me-3.5" style={{ fontSize: "18px" }} />
+        Settings
+      </div>
+    ),
     path: "/settings",
-    className: "text-xl mb-7",
   },
 ];
+
 interface ClickEvent {
   key: string;
 }
@@ -77,7 +96,8 @@ const Sidebar = () => {
       onCollapse={setCollapsed}
       width={256}
       theme="light"
-      className="py-2 bg-white"
+      className="py-2 px-4 bg-background fixed top-0.5"
+      // className="bg-white fixed top-0 left-0 h-screen z-50 shadow-sm"
     >
       <div
         className={`h-8 m-4 flex  uppercase items-center font-bold justify-center ${
@@ -90,9 +110,10 @@ const Sidebar = () => {
       <Menu
         theme="light"
         mode="inline"
-        defaultSelectedKeys={["dashboard"]}
+        defaultSelectedKeys={["todo"]}
         items={items}
         onClick={onClick}
+        style={{ border: "none" }}
         className="h-screen "
       />
     </Sider>

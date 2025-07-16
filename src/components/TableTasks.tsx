@@ -1,28 +1,26 @@
 import { useState } from "react";
 import TableTask from "./TableTask";
 import { CaretDownOutlined, CaretRightOutlined } from "@ant-design/icons";
+import type { ITask } from "../services/types";
 
-const data = [
-  {
-    key: "1",
-    title: "Onboarding tour for new users",
-    tags: ["UX", "Ongoing"],
-    assignee: "https://via.placeholder.com/24",
-    date: "16 Apr '23",
-    priority: "high",
-  },
-  {
-    key: "2",
-    title: "Redesign mobile app",
-    tags: ["UX Design"],
-    assignee: "https://via.placeholder.com/24",
-    date: "14 Apr '23",
-    priority: "medium",
-  },
-];
-
-const TableTasks = () => {
-  const [open, setOpen] = useState<boolean>(false);
+const task: ITask = {
+  id: "1",
+  title: "Design Landing Page",
+  description: "Create a modern UI for the landing page.",
+  assignee: "Ahmed",
+  dueDate: "2025-07-20",
+  priority: "high",
+  status: "in-progress",
+  finished: false,
+  tags: ["design", "UI", "homepage"],
+  image: "https://via.placeholder.com/150",
+  subTasks: [
+    { id: "1-1", title: "Header section", finished: true },
+    { id: "1-2", title: "Hero section", finished: false },
+  ],
+};
+const TableTasks = ({ title }: { title: string }) => {
+  const [open, setOpen] = useState<boolean>(true);
   const toggleCaret = () => {
     setOpen((prev) => !prev);
   };
@@ -39,11 +37,15 @@ const TableTasks = () => {
             <CaretDownOutlined />
           </span>
         )}
-        To-Do
+        {title}
       </div>
       {open && (
         <div>
-          <TableTask />
+          <TableTask task={task} />
+          <TableTask task={task} />
+          <TableTask task={task} />
+          <TableTask task={task} />
+          <TableTask task={task} />
         </div>
       )}
     </div>
