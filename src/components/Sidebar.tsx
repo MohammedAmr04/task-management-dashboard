@@ -18,7 +18,7 @@ const items = [
     icon: <DashboardOutlined />,
     label: "Dashboard",
     path: "/dashboard",
-    className: "text-xl mb-7 ",
+    className: "text-xl text-center mb-7 ",
   },
   {
     key: "analytics",

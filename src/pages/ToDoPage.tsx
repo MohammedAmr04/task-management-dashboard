@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-const ToDo = () => {
+const ToDoPage = () => {
   return (
     <div className="px-2">
       <Outlet />
@@ -8,4 +8,4 @@ const ToDo = () => {
   );
 };
 
-export default ToDo;
+export default ToDoPage;
