@@ -19,8 +19,8 @@ const TableTask = ({ task }: { task: ITask }) => {
     setFinish((prev) => !prev);
   };
   return (
-    <div className="px-4  border-y border-border  ">
-      <div key={task.id} className="flex ">
+    <div key={task.id} className="px-4  border-y border-border  ">
+      <div className="flex ">
         <div className="flex-1 flex py-2 items-center  font-semibold border-r border-border text-text">
           {!open && (
             <span className="cursor-pointer me-1" onClick={toggleCaret}>

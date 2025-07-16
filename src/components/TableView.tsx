@@ -1,6 +1,11 @@
+import { useTasksStatus } from "../services/api/todo/tasks-query";
 import TableTasks from "./TableTasks";
 
 const TableView = () => {
+  const todo = useTasksStatus("to-do");
+  const progress = useTasksStatus("in-progress");
+  const done = useTasksStatus("done");
+
   return (
     <section className="max-w-7xl mx-auto">
       <header className="flex justify-between items-center px-4 py-2 bg-white rounded-md shadow-sm mb-2">
@@ -12,9 +17,9 @@ const TableView = () => {
           <li className="w-24 text-center">Priority</li>
         </ul>
       </header>
-      <TableTasks title="To Do" />
-      <TableTasks title="In progress" />
-      <TableTasks title="Done" />
+      <TableTasks title="To Do" tasks={todo?.data || []} />
+      <TableTasks title="In progress" tasks={progress?.data || []} />
+      <TableTasks title="Done" tasks={done.data || []} />
     </section>
   );
 };
