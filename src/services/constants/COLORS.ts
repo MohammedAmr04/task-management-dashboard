@@ -57,6 +57,13 @@ export const themeColors = {
     success: "#28A745", // Green for success
     warning: "#FFC107", // Yellow for warnings
     info: "#17A2B8", // Blue for informational messages
+    "tag-text-danger": "#c6958f",
+    "tag-bg-danger": "#fee9ec",
+    "tag-text-success": "#6aa978",
+    "tag-bg-success": "#eefbe4",
+    "tag-text-warning": "#dda185",
+    "tag-bg-warning": "#fef3e4",
+    "task-finish": "#aaaaaa",
   },
   darkTheme: {
     primary: "#FF6B35", // Vibrant Orange (consistent)
@@ -78,5 +85,11 @@ export const themeColors = {
     success: "#28A745",
     warning: "#FFC107",
     info: "#17A2B8",
+    "tag-text-danger": "#c6958f",
+    "tag-bg-danger": "#fee9ec",
+    "tag-text-succes": "#6aa978",
+    "tag-bg-succes": "#eefbe4",
+    "tag-text-warning": "#dda185",
+    "tag-bg-warning": "#fef3e4",
   },
 };

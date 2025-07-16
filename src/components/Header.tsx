@@ -1,25 +1,39 @@
-import { Button, Input } from "antd";
+import { Button, Input, Segmented } from "antd";
 import {
   SearchOutlined,
   TableOutlined,
   AppstoreOutlined,
   BellOutlined,
 } from "@ant-design/icons";
-import { NavLink, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import user from "../assets/user.jpg";
+
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const isTodoPage = location.pathname.startsWith("/todo");
+
+  // تحديد التاب الحالي مباشرة من ال pathname
+  const currentTab = location.pathname.includes("card-view")
+    ? "card-view"
+    : "table-view";
+
+  const handleSegmentChange = (value: string | number) => {
+    if (typeof value === "string") {
+      navigate(`/todo/${value}`);
+    }
+  };
 
   return (
     <div className="px-2 py-3">
-      <div className="bg-white px-4 py-2 rounded-3xl flex justify-between items-center max-w-7xl mx-auto">
+      <div className="bg-card px-4 py-2 rounded-3xl flex justify-between items-center max-w-7xl mx-auto">
         <div className="w-64">
           <Input
             placeholder="Search..."
             allowClear
             variant="borderless"
-            className="rounded-3xl  [&_.ant-input-affix-wrapper]:!bg-input"
+            className="rounded-3xl [&_.ant-input-affix-wrapper]:!bg-input"
             prefix={<SearchOutlined />}
             style={{ backgroundColor: "var(--c-background)" }}
           />
@@ -38,29 +52,34 @@ const Header = () => {
 
       {isTodoPage && (
         <div className="flex justify-between items-center my-4 max-w-7xl mx-auto">
-          <div className="flex">
-            <NavLink
-              to="/todo/table-view"
-              className={({ isActive }) =>
-                `flex items-center px-4 py-2 rounded-xl ${
-                  isActive ? "bg-[#f2a471] text-white" : "bg-gray-100"
-                }`
-              }
-            >
-              <TableOutlined />
-            </NavLink>
-            <NavLink
-              to="/todo/card-view"
-              className={({ isActive }) =>
-                `flex items-center px-4 py-2 rounded-xl ${
-                  isActive ? "bg-[#f2a471] text-white" : "bg-gray-100"
-                }`
-              }
-            >
-              <AppstoreOutlined />
-            </NavLink>
+          <div className="flex items-center  gap-4">
+            <Segmented
+              options={[
+                {
+                  value: "table-view",
+                  icon: <TableOutlined />,
+                  className: "transition",
+                },
+                {
+                  value: "card-view",
+                  icon: <AppstoreOutlined />,
+                  className: "bg-card",
+                },
+              ]}
+              value={currentTab}
+              onChange={handleSegmentChange}
+              className="custom-segmented"
+            />
           </div>
-          <Button type="primary" className="rounded-xl">
+
+          <Button
+            style={{
+              color: "var(--c-primary)",
+              borderColor: "var(--c-primary)",
+              fontWeight: "600",
+            }}
+            className="rounded-xl border bg-white "
+          >
             + New Task
           </Button>
         </div>
