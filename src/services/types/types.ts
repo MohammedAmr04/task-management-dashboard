@@ -13,7 +13,7 @@ export interface ITask {
   description?: string;
   assignee: string;
   dueDate: string; // or Date
-  priority: IPriority;
+  priority: IPriority | null;
   status: IStatus;
   finished: boolean;
   tags?: string[];

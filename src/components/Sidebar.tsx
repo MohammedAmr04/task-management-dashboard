@@ -96,7 +96,7 @@ const Sidebar = () => {
       onCollapse={setCollapsed}
       width={256}
       theme="light"
-      className="py-2 px-4 bg-background fixed top-0.5"
+      className="py-2 px-4 bg-background h-screen"
       // className="bg-white fixed top-0 left-0 h-screen z-50 shadow-sm"
     >
       <div

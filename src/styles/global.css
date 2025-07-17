@@ -30,7 +30,7 @@
 }
 
 .ant-menu-item-selected {
-    border-left: 5px #e3905c solid;
+    border-left: 5px var(--color-primary) solid;
 }
 
 .tag {

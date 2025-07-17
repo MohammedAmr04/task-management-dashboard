@@ -10,13 +10,12 @@ export const getTask = async (id: string): Promise<ITask> => {
   const res = await clientApi.get(`/${id}`);
   return res.data;
 };
+
 export const getTasksByStatus = async (status: string): Promise<ITask[]> => {
   const res = await clientApi.get(`/`, { params: { status } });
-  // Filter and return only the first 5 tasks with the given status
-  return (res.data as ITask[])
-    .filter((task) => task.status === status)
-    .slice(0, 5);
+  return (res.data as ITask[]).slice(0, 5);
 };
+
 export const createTask = async (task: Partial<ITask>): Promise<ITask> => {
   const res = await clientApi.post("/", task);
   return res.data;
@@ -26,7 +25,7 @@ export const updateTask = async (
   id: string,
   task: Partial<ITask>
 ): Promise<ITask> => {
-  const res = await clientApi.put(`/${id}`, task);
+  const res = await clientApi.patch(`/${id}`, task);
   return res.data;
 };
 

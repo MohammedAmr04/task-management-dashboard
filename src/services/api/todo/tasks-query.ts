@@ -17,18 +17,16 @@ export const useTasks = () => {
     queryFn: getTasks,
   });
 };
-export const useTasksStatus = (status: IStatus) => {
+export const useTasksByStatus = (status: IStatus) => {
   return useQuery<ITask[]>({
-    queryKey: ["posts", status],
+    queryKey: ["tasks", status],
     queryFn: () => getTasksByStatus(status),
-    enabled: !!status,
   });
 };
 export const useTask = (id: string) => {
   return useQuery<ITask>({
     queryKey: ["task", id],
     queryFn: () => getTask(id),
-    enabled: !!id,
   });
 };
 
