@@ -1,23 +1,38 @@
-import {
-  CaretDownOutlined,
-  CaretRightOutlined,
-  CheckCircleOutlined,
-} from "@ant-design/icons";
+import { CaretDownOutlined, CaretRightOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { FaFlag } from "react-icons/fa";
 import type { ITask } from "../services/types";
+import { Flag } from "@phosphor-icons/react";
+
 import { CiCircleCheck } from "react-icons/ci";
-// import type { ITask } from "../services/types/types";
+import { useUpdateTask } from "../services/api/todo/tasks-query";
 
 const TableTask = ({ task }: { task: ITask }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [finish, setFinish] = useState<boolean>(false);
+  const { mutate } = useUpdateTask();
+  const color =
+    task.priority === "low" || task.priority === null
+      ? ""
+      : task.priority === "medium"
+      ? "var(--c-info)"
+      : "var(--c-danger)";
   const toggleCaret = () => {
     setOpen((prev) => !prev);
   };
+
   const handleFinish = () => {
-    setFinish((prev) => !prev);
+    const updatedFields: Partial<ITask> = {};
+
+    if (task.status === "to-do") {
+      updatedFields.status = "in-progress";
+    } else if (task.status === "in-progress") {
+      updatedFields.status = "done";
+    } else if (task.status === "done") {
+      updatedFields.finished = true;
+    }
+
+    mutate({ id: task.id, task: updatedFields });
   };
+
   return (
     <div key={task.id} className="px-4  border-y border-border  ">
       <div className="flex ">
@@ -32,18 +47,18 @@ const TableTask = ({ task }: { task: ITask }) => {
               <CaretDownOutlined />
             </span>
           )}
-          <span className="me-1" onClick={handleFinish}>
-            {/* <CheckCircleOutlined
-              className={`text-lg rounded-full ${
-                finish ? "bg-primary text-white" : "text-white"
-              }`}
-              color="#fff"
-            /> */}
+          <span className="me-1" onClick={() => handleFinish()}>
             <CiCircleCheck
-              className={`text-lg rounded-full ${finish ? "text-primary" : ""}`}
+              className={`text-lg rounded-full ${
+                task.finished ? "text-primary" : ""
+              }`}
             />
           </span>
-          <span className={`${finish ? "line-through text-task-finsih" : ""}`}>
+          <span
+            className={`${
+              task.finished ? "line-through text-task-finsih" : ""
+            }`}
+          >
             {task.title}
           </span>
           {task?.tags && task.tags.length > 0 && (
@@ -53,7 +68,7 @@ const TableTask = ({ task }: { task: ITask }) => {
           )}
         </div>
 
-        <ul className="flex list-none  text-text border-r border-gray-200 font-medium">
+        <ul className="flex list-none  text-text border-r border-border font-medium">
           <li className="w-24 text-center py-2 border-r border-border">
             {task?.assignee}
           </li>
@@ -61,7 +76,11 @@ const TableTask = ({ task }: { task: ITask }) => {
             {task.dueDate}
           </li>
           <li className="w-24 text-center  text-2xl flex justify-center border-r py-2 border-border">
-            <FaFlag className="text-amber-950" />
+            <Flag
+              size={26}
+              color={color}
+              weight={task.priority === "low" ? "bold" : "fill"}
+            />
           </li>
         </ul>
       </div>

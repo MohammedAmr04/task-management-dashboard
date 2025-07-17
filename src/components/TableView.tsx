@@ -1,10 +1,10 @@
-import { useTasksStatus } from "../services/api/todo/tasks-query";
+import { useTasksByStatus } from "../services/api/todo/tasks-query";
 import TableTasks from "./TableTasks";
 
 const TableView = () => {
-  const todo = useTasksStatus("to-do");
-  const progress = useTasksStatus("in-progress");
-  const done = useTasksStatus("done");
+  const todo = useTasksByStatus("to-do");
+  const progress = useTasksByStatus("in-progress");
+  const done = useTasksByStatus("done");
 
   return (
     <section className="max-w-7xl mx-auto">
