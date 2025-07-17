@@ -2,6 +2,7 @@ import React, { useEffect, type ReactNode } from "react";
 import AntDProvider from "./AntDProvider";
 import { DarkLightProvider, useDarkLight } from "./DarkLightProvider";
 import { themeColors } from "../constants/COLORS";
+import ReactQueryProvider from "./ReactQueryProvider";
 
 type Props = {
   children: ReactNode;
@@ -26,7 +27,9 @@ const UiProvider: React.FC<Props> = ({ children }) => {
   return (
     <DarkLightProvider>
       <SetCSSVariables />
-      <AntDProvider>{children}</AntDProvider>
+      <AntDProvider>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
+      </AntDProvider>
     </DarkLightProvider>
   );
 };
