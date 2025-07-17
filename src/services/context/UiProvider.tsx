@@ -3,6 +3,7 @@ import AntDProvider from "./AntDProvider";
 import { DarkLightProvider, useDarkLight } from "./DarkLightProvider";
 import { themeColors } from "../constants/COLORS";
 import ReactQueryProvider from "./ReactQueryProvider";
+import DndProvider from "./DndProvider";
 
 type Props = {
   children: ReactNode;
@@ -28,7 +29,9 @@ const UiProvider: React.FC<Props> = ({ children }) => {
     <DarkLightProvider>
       <SetCSSVariables />
       <AntDProvider>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          <DndProvider>{children}</DndProvider>
+        </ReactQueryProvider>
       </AntDProvider>
     </DarkLightProvider>
   );
