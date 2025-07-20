@@ -12,7 +12,9 @@ export const getTask = async (id: string): Promise<ITask> => {
 };
 
 export const getTasksByStatus = async (status: string): Promise<ITask[]> => {
-  const res = await clientApi.get(`/`, { params: { status } });
+  const res = await clientApi.get(`/?_sort=position&_order=asc`, {
+    params: { status },
+  });
   return (res.data as ITask[]).slice(0, 5);
 };
 

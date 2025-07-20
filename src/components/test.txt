@@ -1,0 +1,48 @@
+import { CiCircleCheck } from "react-icons/ci";
+import { BsThreeDots } from "react-icons/bs";
+import { useUpdateTask } from "../services/api/todo";
+import type { ITask } from "../services/types";
+
+interface IProps {
+  task: ITask;
+}
+
+const TaskItem = ({ task }: IProps) => {
+  const { mutate } = useUpdateTask();
+
+  const handleFinish = () => {
+    let updatedFields: Partial<ITask> = {};
+
+    if (task.status === "to-do") {
+      updatedFields.status = "in-progress";
+    } else if (task.status === "in-progress") {
+      updatedFields.status = "done";
+    } else if (task.status === "done") {
+      updatedFields.finished = true;
+    }
+
+    mutate({ id: task.id, task: updatedFields });
+  };
+
+  return (
+    <div className="flex items-center justify-between rounded-md p-4 shadow-md bg-white border border-gray-200">
+      <div className="flex items-center gap-2">
+        <span className="me-1 cursor-pointer" onClick={handleFinish}>
+          <CiCircleCheck
+            className={`text-lg rounded-full ${
+              task.finished ? "text-primary" : ""
+            }`}
+          />
+        </span>
+        <span
+          className={`${task.finished ? "line-through text-task-finish" : ""}`}
+        >
+          {task.title}
+        </span>
+      </div>
+      <BsThreeDots className="cursor-pointer" />
+    </div>
+  );
+};
+
+export default TaskItem;
