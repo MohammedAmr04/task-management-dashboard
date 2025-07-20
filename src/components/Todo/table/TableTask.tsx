@@ -104,7 +104,7 @@ const TableTask = ({ task }: { task: ITask }) => {
             {task?.assignee}
           </li>
           <li className="w-28 text-center py-2 border-r border-border">
-            {task.dueDate}
+            {task.dueDate.substring(0, 10)}
           </li>
           <li className="w-24 text-center text-2xl flex justify-center border-r py-2 border-border">
             <Flag
