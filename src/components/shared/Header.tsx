@@ -6,15 +6,29 @@ import {
   BellOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
-import user from "../assets/user.jpg";
+import user from "../../assets/user.jpg";
+import { useState } from "react";
+import FormModal from "./../Todo/form/FormModel";
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const isTodoPage = location.pathname.startsWith("/todo");
 
-  // تحديد التاب الحالي مباشرة من ال pathname
   const currentTab = location.pathname.includes("card-view")
     ? "card-view"
     : "table-view";
@@ -78,10 +92,16 @@ const Header = () => {
               borderColor: "var(--c-primary)",
               fontWeight: "600",
             }}
-            className="rounded-xl border bg-white "
+            className="rounded-xl border bg-card"
+            onClick={showModal}
           >
             + New Task
           </Button>
+          <FormModal
+            isModalOpen={isModalOpen}
+            handleCancel={handleCancel}
+            handleOk={handleOk}
+          />
         </div>
       )}
     </div>

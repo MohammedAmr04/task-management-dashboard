@@ -4,10 +4,10 @@ import {
   HolderOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-import type { ITask } from "../services/types";
+import type { ITask } from "../../../services/types";
 import { Flag } from "@phosphor-icons/react";
 import { CiCircleCheck } from "react-icons/ci";
-import { useUpdateTask } from "../services/api/todo/tasks-query";
+import { useUpdateTask } from "../../../services/api/todo/tasks-query";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -54,7 +54,7 @@ const TableTask = ({ task }: { task: ITask }) => {
       key={task.id}
       ref={setNodeRef}
       style={style}
-      className="px-4 border-y border-border bg-white group relative"
+      className="px-4 border-y border-border task bg-card opacity-100 group relative"
     >
       <div
         className="absolute left-3 top-1/2 bg-background-dark p-1 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-300 transition-opacity cursor-move"

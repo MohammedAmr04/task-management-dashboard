@@ -15,6 +15,7 @@ export interface ITask {
   dueDate: string; // or Date
   priority: IPriority | null;
   status: IStatus;
+  position: number;
   finished: boolean;
   tags?: string[];
   image?: string; // image URL

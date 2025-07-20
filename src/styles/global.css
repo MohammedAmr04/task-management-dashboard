@@ -55,3 +55,8 @@
     color: var(--color-primary) !important;
 
 }
+
+
+.task {
+    opacity: 1 !important;
+}

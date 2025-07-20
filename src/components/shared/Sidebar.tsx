@@ -46,7 +46,7 @@ const items = [
   {
     key: "todo",
     label: (
-      <div className="text-xl flex font-medium ps-3.5 items-center ">
+      <div className="text-xl flex font-medium ps-3.5 items-center me-4  ">
         <CheckSquareOutlined className="me-3.5" style={{ fontSize: "18px" }} />
         To-do
       </div>
@@ -56,7 +56,7 @@ const items = [
   {
     key: "report",
     label: (
-      <div className="text-xl flex font-medium ps-3.5  items-center  ">
+      <div className="text-xl flex font-medium ps-3.5  items-center  me-4  ">
         <FileTextOutlined className="me-3.5" style={{ fontSize: "18px" }} />
         Report
       </div>
@@ -66,7 +66,7 @@ const items = [
   {
     key: "settings",
     label: (
-      <div className="text-xl flex font-medium ps-3.5  items-center  ">
+      <div className="text-xl flex font-medium ps-3.5  items-center me-4  ">
         <SettingOutlined className="me-3.5" style={{ fontSize: "18px" }} />
         Settings
       </div>
