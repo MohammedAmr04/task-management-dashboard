@@ -7,8 +7,8 @@ import HistoryPage from "./pages/HistoryPage";
 import ReportPage from "./pages/ReportPage";
 import SettingsPage from "./pages/SettingsPage";
 import ToDoPage from "./pages/ToDoPage";
-import TableView from "./components/TableView";
-import CardView from "./components/CardView";
+import TableView from "./components/Todo/table/TableView";
+import CardView from "./components/Todo/card/CardView";
 
 function App() {
   return (
