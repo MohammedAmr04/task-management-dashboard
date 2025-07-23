@@ -22,27 +22,38 @@ const TableView = () => {
       .filter((t) => t.status === newStatus && t.id !== taskId)
       .sort((a, b) => a.position - b.position);
 
-    if (!overId || destinationTasks.length === 0) {
-      return destinationTasks.length === 0
-        ? 1
-        : destinationTasks[destinationTasks.length - 1].position + 1;
+    if (destinationTasks.length === 0) {
+      return 1; // مفيش ولا تاسك في الليستة
     }
 
-    const overTask = destinationTasks.find((t) => t.id === overId);
+    if (!overId) {
+      // لو مستخدم سحب التاسك و سابه في المساحة الفاضية (يعني في الآخر)
+      return destinationTasks[destinationTasks.length - 1].position + 1;
+    }
+
     const overIndex = destinationTasks.findIndex((t) => t.id === overId);
 
-    if (!overTask) return 1;
+    if (overIndex === -1) {
+      // احتياطي لو حصلت مشكلة
+      return destinationTasks[destinationTasks.length - 1].position + 1;
+    }
 
     const before = destinationTasks[overIndex - 1];
+    const overTask = destinationTasks[overIndex];
     const after = destinationTasks[overIndex + 1];
 
-    if (before) {
-      return (before.position + overTask.position) / 2;
-    } else if (after) {
-      return (overTask.position + after.position) / 2;
-    } else {
+    // لو عايز تحطه في أول الليستة
+    if (!before) {
+      return overTask.position - 1;
+    }
+
+    // لو عايز تحطه في آخر الليستة
+    if (!after) {
       return overTask.position + 1;
     }
+
+    // لو بين before و overTask
+    return (before.position + overTask.position) / 2;
   };
 
   return (

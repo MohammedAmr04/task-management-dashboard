@@ -6,7 +6,11 @@ export interface ISubTask {
   title: string;
   finished: boolean;
 }
-
+export interface IComment {
+  id: string;
+  content: string;
+  date: string | Date;
+}
 export interface ITask {
   id: string;
   title: string;
@@ -17,6 +21,7 @@ export interface ITask {
   status: IStatus;
   position: number;
   finished: boolean;
+  comments?: IComment[];
   tags?: string[];
   image?: string; // image URL
   subTasks?: ISubTask[];

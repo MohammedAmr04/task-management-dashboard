@@ -49,7 +49,10 @@ const Header = () => {
             variant="borderless"
             className="rounded-3xl [&_.ant-input-affix-wrapper]:!bg-input"
             prefix={<SearchOutlined />}
-            style={{ backgroundColor: "var(--c-background)" }}
+            style={{
+              backgroundColor: "var(--c-background)",
+              borderRadius: "20px",
+            }}
           />
         </div>
         <div className="flex items-center w-40 gap-4">
