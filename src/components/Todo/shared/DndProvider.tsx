@@ -1,10 +1,14 @@
-import { closestCenter, DndContext, type DragEndEvent } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
 import { useUpdateTask } from "../../../services/api/todo";
 import type { IStatus } from "../../../services/types";
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from "@dnd-kit/modifiers";
+import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 const DndProvider = ({
   children,
   getNewPosition,
@@ -37,12 +41,20 @@ const DndProvider = ({
       },
     });
   };
-  
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      delay: 200, // delay before starting drag (ms)
+      tolerance: 5, // movement in px before drag starts
+    },
+  });
+
+  const sensors = useSensors(pointerSensor);
   return (
     <DndContext
-      modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+      modifiers={[restrictToWindowEdges]}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
+      sensors={sensors}
     >
       {children}
     </DndContext>

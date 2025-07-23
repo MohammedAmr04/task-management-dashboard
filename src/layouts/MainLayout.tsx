@@ -4,9 +4,9 @@ import Header from "../components/shared/Header";
 
 const MainLayout = () => {
   return (
-    <main className="flex relative">
+    <main className="flex ">
       <Sidebar />
-      <div className="px-5 py-4 w-screen overflow-y-auto h-screen  rounded-2xl bg-background">
+      <div className="px-5 pt-4 w-screen   rounded-2xl bg-background">
         <Header />
         <Outlet />
       </div>

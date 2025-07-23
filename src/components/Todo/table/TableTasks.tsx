@@ -4,9 +4,10 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import TableTask from "./TableTask";
+import { useState } from "react";
+import FormModal from "../form/FormModel";
 import { CaretDownOutlined, CaretRightOutlined } from "@ant-design/icons";
 import type { IStatus, ITask } from "../../../services/types";
-import { useState } from "react";
 
 const TableTasks = ({
   title,
@@ -18,6 +19,7 @@ const TableTasks = ({
   status: IStatus;
 }) => {
   const [open, setOpen] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { setNodeRef } = useDroppable({ id: status });
   const [activeTask, setActiveTask] = useState<ITask | null>(null);
 
@@ -41,14 +43,24 @@ const TableTasks = ({
 
   return (
     <div className="max-w-7xl mx-auto py-4">
-      <div className="font-medium bg-background-dark py-2 ps-2 rounded-t-xl flex items-center">
-        <span className="cursor-pointer me-2" onClick={toggleCaret}>
-          {open ? <CaretDownOutlined /> : <CaretRightOutlined />}
-        </span>
-        {title}
-        <span className="ml-2 text-gray-500">({tasks.length})</span>
+      <div className="font-medium bg-background-dark py-2 ps-2 rounded-t-xl flex items-center justify-between">
+        <div className="flex items-center">
+          <span className="cursor-pointer me-2" onClick={toggleCaret}>
+            {open ? <CaretDownOutlined /> : <CaretRightOutlined />}
+          </span>
+          {title}
+          <span className="ml-2 rounded-full px-1 border border-border bg-card">
+            {tasks.length}
+          </span>
+        </div>
       </div>
-
+      <FormModal
+        isModalOpen={isModalOpen}
+        handleCancel={() => setIsModalOpen(false)}
+        handleOk={() => setIsModalOpen(false)}
+        // Pass default status for this table
+        initialValues={{ status }}
+      />
       {open && (
         <div ref={setNodeRef} className="bg-gray-50 rounded-b-xl shadow-sm">
           <SortableContext
@@ -71,6 +83,17 @@ const TableTasks = ({
               </div>
             ) : null}
           </DragOverlay>
+          <div
+            className={`px-4 border-y border-border task bg-card !opacity-100 group relative`}
+          >
+            {" "}
+            <button
+              className=" text-primary px-3 py-2 font-medium rounded hover:bg-primary hover:text-card cursor-pointer duration-300 transition"
+              onClick={() => setIsModalOpen(true)}
+            >
+              + Add Task
+            </button>
+          </div>
         </div>
       )}
     </div>

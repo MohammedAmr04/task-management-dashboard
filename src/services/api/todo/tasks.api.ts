@@ -1,5 +1,6 @@
 import { clientApi } from "../clientApi";
 import type { ITask } from "../../types/types";
+import { normalizeTask } from "../../utils/utils";
 
 export const getTasks = async (): Promise<ITask[]> => {
   const res = await clientApi.get("/");
@@ -19,7 +20,9 @@ export const getTasksByStatus = async (status: string): Promise<ITask[]> => {
 };
 
 export const createTask = async (task: Partial<ITask>): Promise<ITask> => {
-  const res = await clientApi.post("/", task);
+  const nor = normalizeTask(task);
+  console.log(nor);
+  const res = await clientApi.post("/", nor);
   return res.data;
 };
 
