@@ -1,122 +1,85 @@
 import { useState } from "react";
-import { Layout, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
-  DashboardOutlined,
-  LineChartOutlined,
-  HistoryOutlined,
-  CheckSquareOutlined,
-  FileTextOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
-
-const { Sider } = Layout;
+  MdDashboard,
+  MdInsertChart,
+  MdHistory,
+  MdChecklist,
+  MdDescription,
+  MdSettings,
+  MdMenu,
+  MdClose,
+} from "react-icons/md";
 
 const items = [
   {
     key: "dashboard",
-    label: (
-      <div className="text-xl flex font-medium ps-3.5 items-center  ">
-        <DashboardOutlined className="me-3.5" style={{ fontSize: "18px" }} />
-        Dashboard
-      </div>
-    ),
+    label: "Dashboard",
+    icon: <MdDashboard />,
     path: "/dashboard",
   },
   {
     key: "analytics",
-    label: (
-      <div className="text-xl flex font-medium ps-3.5 items-center  ">
-        <LineChartOutlined className="me-3.5" style={{ fontSize: "18px" }} />
-        Analytics
-      </div>
-    ),
+    label: "Analytics",
+    icon: <MdInsertChart />,
     path: "/analytics",
   },
-  {
-    key: "history",
-    label: (
-      <div className="text-xl flex font-medium ps-3.5 items-center ">
-        <HistoryOutlined className="me-3.5" style={{ fontSize: "18px" }} />
-        History
-      </div>
-    ),
-    path: "/history",
-  },
-  {
-    key: "todo",
-    label: (
-      <div className="text-xl flex font-medium ps-3.5 items-center me-4  ">
-        <CheckSquareOutlined className="me-3.5" style={{ fontSize: "18px" }} />
-        To-do
-      </div>
-    ),
-    path: "/todo",
-  },
-  {
-    key: "report",
-    label: (
-      <div className="text-xl flex font-medium ps-3.5  items-center  me-4  ">
-        <FileTextOutlined className="me-3.5" style={{ fontSize: "18px" }} />
-        Report
-      </div>
-    ),
-    path: "/report",
-  },
+  { key: "history", label: "History", icon: <MdHistory />, path: "/history" },
+  { key: "todo", label: "To-do", icon: <MdChecklist />, path: "/todo" },
+  { key: "report", label: "Report", icon: <MdDescription />, path: "/report" },
   {
     key: "settings",
-    label: (
-      <div className="text-xl flex font-medium ps-3.5  items-center me-4  ">
-        <SettingOutlined className="me-3.5" style={{ fontSize: "18px" }} />
-        Settings
-      </div>
-    ),
+    label: "Settings",
+    icon: <MdSettings />,
     path: "/settings",
   },
 ];
-
-interface ClickEvent {
-  key: string;
-}
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
-  const onClick = (e: ClickEvent) => {
-    const item = items.find((i) => i.key === e.key);
-    if (item && item.path) {
-      navigate(item.path);
-    }
+  const handleClick = (path: string) => {
+    navigate(path);
   };
+
   return (
-    <Sider
-      collapsible
-      collapsed={collapsed}
-      onCollapse={setCollapsed}
-      width={256}
-      theme="light"
-      className="py-2 px-4 bg-background h-screen"
-      // className="bg-white fixed top-0 left-0 h-screen z-50 shadow-sm"
+    <div
+      className={`h-screen bg-card sticky top-0 shadow-md transition-all duration-300 ${
+        collapsed ? "w-20" : "w-64"
+      } flex flex-col`}
     >
-      <div
-        className={`h-8 m-4 flex  uppercase items-center font-bold justify-center ${
-          collapsed ? "text-xl" : "text-4xl"
-        } `}
-      >
-        Task
-        <span className="text-primary normal-case">.ai</span>
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        <h1
+          className={`uppercase font-bold transition-all duration-300 ${
+            collapsed ? "text-xl mx-auto" : "text-3xl mx-auto"
+          }`}
+        >
+          Task<span className="text-primary normal-case">.ai</span>
+        </h1>
       </div>
-      <Menu
-        theme="light"
-        mode="inline"
-        defaultSelectedKeys={["todo"]}
-        items={items}
-        onClick={onClick}
-        style={{ border: "none" }}
-        className="h-screen "
-      />
-    </Sider>
+
+      <nav className="flex-1 p-2 space-y-1 relative">
+        {items.map((item) => (
+          <div
+            key={item.key}
+            className="flex items-center p-3 ps-9 mb-2  rounded-lg hover:bg-primary hover:text-card cursor-pointer transition-all"
+            onClick={() => handleClick(item.path)}
+          >
+            <span className="text-xl me-4">{item.icon}</span>
+            {!collapsed && (
+              <span className="text-xl font-medium">{item.label}</span>
+            )}
+          </div>
+        ))}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className=" text-2xl p-3 mb-2 px-0 absolute start-[50%] translate-x-[-50%]  cursor-pointer transition-all"
+        >
+          {collapsed ? <MdMenu /> : <MdClose />}
+        </button>
+      </nav>
+    </div>
   );
 };
 

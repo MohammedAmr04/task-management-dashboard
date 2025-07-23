@@ -21,7 +21,6 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
         {children}
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-      ;
     </>
   );
 };

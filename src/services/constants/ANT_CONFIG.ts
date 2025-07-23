@@ -5,7 +5,7 @@ export const lightConfig: ThemeConfig = {
   algorithm: theme.defaultAlgorithm,
   token: {
     colorPrimary: themeColors.lightTheme.primary,
-    colorTextBase: themeColors.lightTheme.dark,
+    colorTextBase: themeColors.lightTheme.text,
   },
   components: {
     Menu: {
@@ -14,9 +14,9 @@ export const lightConfig: ThemeConfig = {
     Layout: {
       siderBg: "#fff",
     },
-    Input: {
-      borderRadius: 20,
-    },
+    // Input: {
+    //   borderRadius: 20,
+    // },
   },
 };
 
@@ -25,6 +25,6 @@ export const darkConfig: ThemeConfig = {
   token: {
     colorPrimary: themeColors.darkTheme.primary,
     colorBgBase: themeColors.darkTheme.background,
-    colorTextBase: themeColors.darkTheme.dark,
+    colorTextBase: themeColors.darkTheme.text,
   },
 };

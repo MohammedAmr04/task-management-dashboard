@@ -5,6 +5,7 @@ import {
 } from "@ant-design/icons";
 import { useState } from "react";
 import type { ITask } from "../../../services/types";
+import EditTask from "../editTask/EditTask";
 import { Flag } from "@phosphor-icons/react";
 import { CiCircleCheck } from "react-icons/ci";
 import { useUpdateTask } from "../../../services/api/todo/tasks-query";
@@ -13,15 +14,24 @@ import { CSS } from "@dnd-kit/utilities";
 
 const TableTask = ({ task }: { task: ITask }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutate } = useUpdateTask();
   // DND-kit
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: task.id,
-    });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id,
+  });
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
+    opacity: isDragging ? 0.5 : "1 !important",
+    zIndex: isDragging ? 50 : "unset",
   };
 
   const color =
@@ -54,14 +64,15 @@ const TableTask = ({ task }: { task: ITask }) => {
       key={task.id}
       ref={setNodeRef}
       style={style}
-      className="px-4 border-y border-border task bg-card opacity-100 group relative"
+      className={`px-4 border-y border-border task bg-card !opacity-100 group relative`}
+      onClick={() => setIsModalOpen(true)}
     >
       <div
         className="absolute left-3 top-1/2 bg-background-dark p-1 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-300 transition-opacity cursor-move"
         {...listeners}
-        {...attributes}
+        {...(isDragging ? attributes : {})}
       >
-        <HolderOutlined className="text-gray-400 text-lg" />
+        <HolderOutlined className="text-border text-lg" />
       </div>
 
       <div className="flex">
@@ -77,7 +88,13 @@ const TableTask = ({ task }: { task: ITask }) => {
               <CaretDownOutlined />
             </span>
           )}
-          <span className="me-1" onClick={() => handleFinish()}>
+          <span
+            className="me-1"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleFinish();
+            }}
+          >
             <CiCircleCheck
               className={`text-lg rounded-full ${
                 task.finished ? "text-primary" : ""
@@ -115,6 +132,11 @@ const TableTask = ({ task }: { task: ITask }) => {
           </li>
         </ul>
       </div>
+      <EditTask
+        task={task}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
