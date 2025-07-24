@@ -49,7 +49,11 @@ const Sidebar = () => {
         collapsed ? "w-20" : "w-64"
       } flex flex-col`}
     >
-      <div className="flex items-center justify-between p-4 border-b border-border">
+      <div
+        className={`flex items-center justify-between  ${
+          collapsed ? "py-4" : "p-4"
+        }  border-b border-border`}
+      >
         <h1
           className={`uppercase font-bold transition-all duration-300 ${
             collapsed ? "text-xl mx-auto" : "text-3xl mx-auto"
@@ -63,7 +67,9 @@ const Sidebar = () => {
         {items.map((item) => (
           <div
             key={item.key}
-            className="flex items-center p-3 ps-9 mb-2  rounded-lg hover:bg-primary hover:text-card cursor-pointer transition-all"
+            className={`flex items-center   ${
+              collapsed ? "py-3 ps-2.5 justify-center" : "p-3 ps-9"
+            }  mb-2 border-l-3 border-transparent hover:border-primary   rounded-lg hover:bg-tag-bg-danger hover:text-primary cursor-pointer transition-all`}
             onClick={() => handleClick(item.path)}
           >
             <span className="text-xl me-4">{item.icon}</span>
@@ -74,7 +80,7 @@ const Sidebar = () => {
         ))}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className=" text-2xl p-3 mb-2 px-0 absolute start-[50%] translate-x-[-50%]  cursor-pointer transition-all"
+          className=" text-2xl py-3 mb-2 px-0 absolute start-[50%] translate-x-[-50%]  cursor-pointer transition-all"
         >
           {collapsed ? <MdMenu /> : <MdClose />}
         </button>

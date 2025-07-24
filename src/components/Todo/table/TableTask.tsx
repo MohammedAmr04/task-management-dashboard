@@ -11,6 +11,7 @@ import { CiCircleCheck } from "react-icons/ci";
 import { useUpdateTask } from "../../../services/api/todo/tasks-query";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import dayjs from "dayjs";
 
 const TableTask = ({ task }: { task: ITask }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -60,84 +61,87 @@ const TableTask = ({ task }: { task: ITask }) => {
   };
 
   return (
-    <div
-      key={task.id}
-      ref={setNodeRef}
-      style={style}
-      className={`px-4 border-y border-border task bg-card !opacity-100 group relative`}
-      onClick={() => setIsModalOpen(true)}
-    >
+    <>
       <div
-        className="absolute left-3 top-1/2 bg-background-dark p-1 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-300 transition-opacity cursor-move"
-        {...listeners}
-        {...(isDragging ? attributes : {})}
+        key={task.id}
+        ref={setNodeRef}
+        style={style}
+        className={`px-4 border-y border-border task bg-card !opacity-100 group relative`}
+        onClick={() => setIsModalOpen(true)}
       >
-        <HolderOutlined className="text-border text-lg" />
-      </div>
-
-      <div className="flex">
-        {/* Task Title Column */}
-        <div className="flex-1 flex py-2 items-center font-semibold border-r border-border text-text pl-6">
-          {!open && (
-            <span className="cursor-pointer me-1" onClick={toggleCaret}>
-              <CaretRightOutlined />
-            </span>
-          )}
-          {open && (
-            <span className="cursor-pointer me-1" onClick={toggleCaret}>
-              <CaretDownOutlined />
-            </span>
-          )}
-          <span
-            className="me-1"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleFinish();
-            }}
-          >
-            <CiCircleCheck
-              className={`text-lg rounded-full ${
-                task.finished ? "text-primary" : ""
-              }`}
-            />
-          </span>
-          <span
-            className={`${
-              task.finished ? "line-through text-task-finsih" : ""
-            }`}
-          >
-            {task.title}
-          </span>
-          {task?.tags && task.tags.length > 0 && (
-            <div className="ms-3">
-              <span className="tag tag-success">{task.tags[0]}</span>
-            </div>
-          )}
+        <div
+          className="absolute left-3 top-1/2 bg-background-dark p-1 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-300 transition-opacity cursor-move"
+          {...listeners}
+          {...(isDragging ? attributes : {})}
+        >
+          <HolderOutlined className="text-border text-lg" />
         </div>
 
-        {/* Right Side Columns */}
-        <ul className="flex list-none text-text border-r border-border font-medium">
-          <li className="w-24 text-center py-2 border-r border-border">
-            {task?.assignee}
-          </li>
-          <li className="w-28 text-center py-2 border-r border-border">
-            {task.dueDate.substring(0, 10)}
-          </li>
-          <li className="w-24 text-center text-2xl flex justify-center border-r py-2 border-border">
-            <Flag
-              size={26}
-              color={color}
-              weight={task.priority === "low" ? "bold" : "fill"}
-            />
-          </li>
-        </ul>
+        <div className="flex">
+          {/* Task Title Column */}
+          <div className="flex-1 flex py-2 items-center font-semibold border-r border-border text-text pl-6">
+            {!open && (
+              <span className="cursor-pointer me-1" onClick={toggleCaret}>
+                <CaretRightOutlined />
+              </span>
+            )}
+            {open && (
+              <span className="cursor-pointer me-1" onClick={toggleCaret}>
+                <CaretDownOutlined />
+              </span>
+            )}
+            <span
+              className="me-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFinish();
+              }}
+            >
+              <CiCircleCheck
+                className={`text-lg rounded-full ${
+                  task.finished ? "text-primary" : ""
+                }`}
+              />
+            </span>
+            <span
+              className={`${
+                task.finished ? "line-through text-task-finsih" : ""
+              }`}
+            >
+              {task.title}
+            </span>
+            {task?.tags && task.tags.length > 0 && (
+              <div className="ms-3">
+                <span className="tag tag-success">{task.tags[0]}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Right Side Columns */}
+          <ul className="flex list-none text-text border-r border-border font-medium">
+            <li className="w-24 text-center py-2 border-r border-border">
+              {task?.assignee}
+            </li>
+            <li className="w-28 text-center py-2 border-r border-border">
+              {dayjs(task.dueDate).format("YYYY-MM-DD")}
+            </li>
+
+            <li className="w-24 text-center text-2xl flex justify-center border-r py-2 border-border">
+              <Flag
+                size={26}
+                color={color}
+                weight={task.priority === "low" ? "bold" : "fill"}
+              />
+            </li>
+          </ul>
+        </div>
       </div>
       <EditTask
         task={task}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-    </div>
+    </>
   );
 };
 

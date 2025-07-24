@@ -21,7 +21,6 @@ export const getTasksByStatus = async (status: string): Promise<ITask[]> => {
 
 export const createTask = async (task: Partial<ITask>): Promise<ITask> => {
   const nor = normalizeTask(task);
-  console.log(nor);
   const res = await clientApi.post("/", nor);
   return res.data;
 };
@@ -36,4 +35,14 @@ export const updateTask = async (
 
 export const deleteTask = async (id: string): Promise<void> => {
   await clientApi.delete(`/${id}`);
+};
+export const searchTasks = async (query: string): Promise<ITask[]> => {
+  if (!query.trim()) return [];
+
+  const res = await clientApi.get("", {
+    params: {
+      q: query,
+    },
+  });
+  return res.data;
 };
