@@ -8,7 +8,15 @@ import {
   updateTask,
   deleteTask,
   getTasksByStatus,
+  searchTasks,
 } from "./tasks.api";
+// React Query hook for searching tasks
+export const useSearchTasks = (query: string) => {
+  return useQuery<ITask[]>({
+    queryKey: ["searchTasks", query],
+    queryFn: () => searchTasks(query),
+  });
+};
 import type { IStatus, ITask } from "../../types/types";
 
 export const useTasks = () => {

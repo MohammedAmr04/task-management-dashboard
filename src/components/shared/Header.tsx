@@ -1,4 +1,4 @@
-import { Button, Input, Segmented } from "antd";
+import { Button, Input, Segmented, List } from "antd";
 import {
   SearchOutlined,
   TableOutlined,
@@ -8,13 +8,22 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import user from "../../assets/user.jpg";
 import { useState } from "react";
+import { useSearchTasks } from "../../services/api/todo/tasks-query";
+import EditTask from "../Todo/editTask/EditTask";
 import FormModal from "./../Todo/form/FormModel";
+import type { ITask } from "./../../services/types/types";
+import { useDebounce } from "use-debounce";
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [debouncedSearchValue] = useDebounce(searchValue, 500); // 500ms delay
 
+  const { data: searchResults, isLoading: searchLoading } =
+    useSearchTasks(debouncedSearchValue);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -53,6 +62,8 @@ const Header = () => {
               backgroundColor: "var(--c-background)",
               borderRadius: "20px",
             }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
         <div className="flex items-center w-40 gap-4">
@@ -66,6 +77,37 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      {/* Search Results List */}
+      {searchValue && searchResults && searchResults.length > 0 && (
+        <div className="max-w-7xl h-[300px] overflow-auto mx-auto bg-card rounded-xl shadow p-4 mt-2">
+          <List
+            loading={searchLoading}
+            dataSource={searchResults}
+            renderItem={(item) => (
+              <List.Item
+                key={item.id}
+                className="cursor-pointer hover:bg-background-dark rounded"
+                onClick={() => setSelectedTask(item)}
+              >
+                <div className="flex justify-between items-center w-full">
+                  <span className="font-semibold text-text">{item.title}</span>
+                </div>
+              </List.Item>
+            )}
+            locale={{ emptyText: "No tasks found." }}
+          />
+        </div>
+      )}
+
+      {/* EditTask Modal for search result */}
+      {selectedTask && (
+        <EditTask
+          task={selectedTask}
+          isOpen={!!selectedTask}
+          onClose={() => setSelectedTask(null)}
+        />
+      )}
 
       {isTodoPage && (
         <div className="flex justify-between items-center my-4 max-w-7xl mx-auto">

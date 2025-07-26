@@ -8,10 +8,16 @@ import {
   Col,
   Button,
   Space,
+  message,
 } from "antd";
 import type { FC } from "react";
 import { useForm } from "antd/es/form/Form";
-import type { ITask, IPriority, IStatus } from "../../../services/types/types";
+import type {
+  ITask,
+  IPriority,
+  IStatus,
+  ISubTask,
+} from "../../../services/types/types";
 import { useCreateTask } from "../../../services/api/todo";
 import MDEditor, { commands } from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
@@ -39,12 +45,10 @@ const FormModal: FC<FormModalProps> = ({
 }) => {
   const [form] = useForm();
   const { mutate } = useCreateTask();
-
   const [description, setDescription] = useState<string | undefined>(
     initialValues.description ?? ""
   );
 
-  // Set initial values when modal opens
   useEffect(() => {
     if (isModalOpen) {
       form.setFieldsValue(initialValues);
@@ -56,11 +60,32 @@ const FormModal: FC<FormModalProps> = ({
     form
       .validateFields()
       .then((values) => {
+        if (!description || description.trim() === "") {
+          form.setFields([
+            {
+              name: "description",
+              errors: ["Description is required"],
+            },
+          ]);
+          return;
+        }
+
         const finalValues = {
           ...initialValues,
           ...values,
           description,
         };
+
+        // Validate subTasks
+        if (finalValues.subTasks) {
+          const invalidSubtask = finalValues.subTasks.some(
+            (sub: ISubTask) => !sub.title || typeof sub.title !== "string"
+          );
+          if (invalidSubtask) {
+            return message.error("Each sub-task must have a valid title.");
+          }
+        }
+
         mutate(finalValues);
         handleOk(finalValues);
         form.resetFields();
@@ -70,6 +95,7 @@ const FormModal: FC<FormModalProps> = ({
         console.log("Validation Failed:", info);
       });
   };
+
   const onHandleCancel = () => {
     document.body.style.overflow = "auto";
     handleCancel();
@@ -84,11 +110,15 @@ const FormModal: FC<FormModalProps> = ({
       closable
     >
       <Form form={form} layout="vertical">
-        <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+        <Form.Item
+          name="title"
+          label="Title"
+          rules={[{ required: true, message: "Title is required" }]}
+        >
           <Input placeholder="Enter task title" />
         </Form.Item>
 
-        <Form.Item label="Description">
+        <Form.Item label="Description" required>
           <div data-color-mode="light">
             <MDEditor
               height={200}
@@ -103,7 +133,32 @@ const FormModal: FC<FormModalProps> = ({
           <Input placeholder="Enter assignee name" />
         </Form.Item>
 
-        <Form.Item name="dueDate" label="Due Date">
+        <Form.Item
+          name="dueDate"
+          label="Due Date"
+          rules={[
+            {
+              required: true,
+              message: "Please select a due date",
+            },
+            {
+              validator: (_, value) => {
+                if (!value) return Promise.resolve();
+
+                const today = new Date();
+                const selectedDate = value.toDate();
+
+                today.setHours(0, 0, 0, 0);
+                selectedDate.setHours(0, 0, 0, 0);
+
+                return selectedDate > today
+                  ? Promise.resolve()
+                  : Promise.reject(new Error("Date must be after today"));
+              },
+            },
+          ]}
+        >
+>>>>>>> 01ebbb9ca080187eb002fe7659e9da0bb0c8f73d
           <DatePicker style={{ width: "100%" }} />
         </Form.Item>
 
@@ -121,7 +176,20 @@ const FormModal: FC<FormModalProps> = ({
           </Col>
 
           <Col xs={24} sm={24} md={8}>
-            <Form.Item name="status" label="Status" initialValue="to-do">
+            <Form.Item
+              name="status"
+              label="Status"
+              initialValue="to-do"
+              rules={[
+                { required: true, message: "Status is required" },
+                {
+                  validator: (_, value) =>
+                    ["to-do", "in-progress", "done"].includes(value)
+                      ? Promise.resolve()
+                      : Promise.reject("Invalid status"),
+                },
+              ]}
+            >
               <Select disabled={!!initialValues.status}>
                 {statusOptions.map(({ label, value }) => (
                   <Select.Option key={value} value={value}>
@@ -133,15 +201,22 @@ const FormModal: FC<FormModalProps> = ({
           </Col>
 
           <Col xs={24} sm={24} md={8}>
-            <Form.Item name="tags" label="Tags">
+            <Form.Item
+              name="tags"
+              label="Tags"
+              rules={[
+                {
+                  validator: (_, value) =>
+                    !value || Array.isArray(value)
+                      ? Promise.resolve()
+                      : Promise.reject("Tags must be an array"),
+                },
+              ]}
+            >
               <Select mode="tags" placeholder="Add tags" />
             </Form.Item>
           </Col>
         </Row>
-
-        <Form.Item name="image" label="Image URL">
-          <Input placeholder="Enter image URL" />
-        </Form.Item>
 
         <Form.List name="subTasks">
           {(fields, { add, remove }) => (
