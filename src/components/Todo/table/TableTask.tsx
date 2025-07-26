@@ -54,8 +54,10 @@ const TableTask = ({ task }: { task: ITask }) => {
       updatedFields.status = "in-progress";
     } else if (task.status === "in-progress") {
       updatedFields.status = "done";
-    } else if (task.status === "done") {
+    } else if (task.status === "done" && task.finished === false) {
       updatedFields.finished = true;
+    } else if (task.status === "done" && task.finished === true) {
+      updatedFields.finished = false;
     }
 
     mutate({ id: task.id, task: updatedFields });
@@ -71,83 +73,6 @@ const TableTask = ({ task }: { task: ITask }) => {
         className={`px-4 border-y border-border task bg-card !opacity-100 group relative`}
         onClick={() => setIsModalOpen(true)}
       >
-        <HolderOutlined className="text-border text-lg" />
-      </div>
-
-      <div className="flex">
-        {/* Task Title Column */}
-        <div className="flex-1 flex py-2 items-center font-semibold border-r border-border text-text pl-6">
-          {!open && (
-            <span className="cursor-pointer me-1" onClick={toggleCaret}>
-              <CaretRightOutlined />
-            </span>
-          )}
-          {open && (
-            <span className="cursor-pointer me-1" onClick={toggleCaret}>
-              <CaretDownOutlined />
-            </span>
-          )}
-          <span
-            className="me-1"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleFinish();
-            }}
-          >
-            <CiCircleCheck
-              className={`text-lg rounded-full ${
-                task.finished ? "text-primary" : ""
-              }`}
-            />
-          </span>
-          <span
-            className={`${
-              task.finished ? "line-through text-task-finsih" : ""
-            }`}
-          >
-            {task.title}
-          </span>
-          {task?.tags && task.tags.length > 0 && (
-            <div className="ms-3">
-              <span className="tag tag-success">{task.tags[0]}</span>
-            </div>
-          )}
-          <span className="text-xs ms-1 flex items-center gap-1 font-semibold text-text-light">
-            {task.subTasks && task.subTasks?.length > 0 && (
-              <>
-                <CheckSquare size={18} weight="bold" />
-                {tasksFinished?.length}/{task.subTasks?.length}
-              </>
-            )}
-          </span>
-        </div>
-
-        {/* Right Side Columns */}
-        <ul className="flex list-none text-text border-r border-border font-medium">
-          <li className="w-24 text-center py-2 border-r border-border">
-            {task.assignee ? (
-              <span className=" tag tag-warning">
-                {task.assignee.substring(0, 2)}
-              </span>
-            ) : (
-              <UsersThree size={18} />
-            )}
-          </li>
-          <li className="w-28 text-center py-2 border-r border-border">
-            {task.dueDate ? (
-              dayjs(task.dueDate).format("D MMM'YY")
-            ) : (
-              <Calendar size={32} />
-            )}
-          </li>
-          <li className="w-24 text-center text-2xl flex justify-center border-r py-2 border-border">
-            <Flag
-              size={26}
-              color={color}
-              weight={task.priority === "low" ? "bold" : "fill"}
-            />
-          </li>
-        </ul>
         <div
           className="absolute left-3 top-1/2 bg-background-dark p-1 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-300 transition-opacity cursor-move"
           {...listeners}
@@ -155,7 +80,6 @@ const TableTask = ({ task }: { task: ITask }) => {
         >
           <HolderOutlined className="text-border text-lg" />
         </div>
-
         <div className="flex">
           {/* Task Title Column */}
           <div className="flex-1 flex py-2 items-center font-semibold border-r border-border text-text pl-6">
@@ -194,17 +118,34 @@ const TableTask = ({ task }: { task: ITask }) => {
                 <span className="tag tag-success">{task.tags[0]}</span>
               </div>
             )}
+            <span className="text-xs ms-1 flex items-center gap-1 font-semibold text-text-light">
+              {task.subTasks && task.subTasks?.length > 0 && (
+                <>
+                  <CheckSquare size={18} weight="bold" />
+                  {tasksFinished?.length}/{task.subTasks?.length}
+                </>
+              )}
+            </span>
           </div>
 
           {/* Right Side Columns */}
           <ul className="flex list-none text-text border-r border-border font-medium">
             <li className="w-24 text-center py-2 border-r border-border">
-              {task?.assignee}
+              {task.assignee ? (
+                <span className=" tag tag-warning">
+                  {task.assignee.substring(0, 2)}
+                </span>
+              ) : (
+                <UsersThree size={18} />
+              )}
             </li>
             <li className="w-28 text-center py-2 border-r border-border">
-              {dayjs(task.dueDate).format("YYYY-MM-DD")}
+              {task.dueDate ? (
+                dayjs(task.dueDate).format("D MMM'YY")
+              ) : (
+                <Calendar size={32} />
+              )}
             </li>
-
             <li className="w-24 text-center text-2xl flex justify-center border-r py-2 border-border">
               <Flag
                 size={26}
@@ -213,8 +154,16 @@ const TableTask = ({ task }: { task: ITask }) => {
               />
             </li>
           </ul>
+          <div
+            className="absolute left-3 top-1/2 bg-background-dark p-1 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-300 transition-opacity cursor-move"
+            {...listeners}
+            {...(isDragging ? attributes : {})}
+          >
+            <HolderOutlined className="text-border text-lg" />
+          </div>
         </div>
       </div>
+
       <EditTask
         task={task}
         isOpen={isModalOpen}

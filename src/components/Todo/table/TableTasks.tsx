@@ -22,6 +22,7 @@ const TableTasks = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { setNodeRef } = useDroppable({ id: status });
   const [activeTask, setActiveTask] = useState<ITask | null>(null);
+  console.log("label", title);
 
   useDndMonitor({
     onDragStart: (event) => {
@@ -78,7 +79,12 @@ const TableTasks = ({
           </SortableContext>
           <DragOverlay>
             {activeTask ? (
-              <div>
+              <div
+                style={{
+                  transform: `rotate(1deg) scale(1.03)`,
+                  opacity: 0.9,
+                }}
+              >
                 <TableTask key={`overlay${activeTask.id}`} task={activeTask} />
               </div>
             ) : null}

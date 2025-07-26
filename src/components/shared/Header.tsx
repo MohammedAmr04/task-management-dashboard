@@ -69,7 +69,7 @@ const Header = () => {
         <div className="flex items-center w-40 gap-4">
           <BellOutlined style={{ fontSize: "1.2rem" }} />
           <div className="flex items-center space-x-2">
-            <img src={user} alt="avatar" className="size-8" />
+            <img src={user} alt="avatar" className="rounded-full size-8" />
             <div className="flex flex-col text-[8px]">
               <p>Workspace</p>
               <p>brazilyy</p>

@@ -66,7 +66,18 @@ const CardView = () => {
 
     return (before.position + overTask.position) / 2;
   };
-
+  if (todo.isError || progress.isError || done.isError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-red-600">
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+        >
+          reload
+        </button>
+      </div>
+    );
+  }
   return (
     <div className="max-w-7xl mx-auto py-4">
       <DndProvider getNewPosition={getNewPosition}>

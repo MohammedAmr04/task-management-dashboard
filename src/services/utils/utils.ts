@@ -28,7 +28,7 @@ export const normalizeTask = (task: Partial<ITask>): ITask => {
   return {
     id: task.id || uuidv4(),
     title: task.title || "Untitled Task",
-    description: task.description ?? "",
+    description: task.description,
     assignee: task.assignee || null,
     dueDate: task.dueDate || null,
     priority: task.priority ?? "low",

@@ -78,7 +78,15 @@ const CardTasks = ({
 
         <DragOverlay>
           {activeTask ? (
-            <CardTask key={`overlay-${activeTask.id}`} task={activeTask} />
+            <div
+              className="shake"
+              style={{
+                transform: `rotate(1deg) scale(1.03)`,
+                opacity: 0.9,
+              }}
+            >
+              <CardTask key={`overlay-${activeTask.id}`} task={activeTask} />
+            </div>
           ) : null}
         </DragOverlay>
       </div>

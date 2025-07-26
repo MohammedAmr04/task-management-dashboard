@@ -14,7 +14,7 @@ export interface IComment {
 export interface ITask {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   assignee?: string | null;
   dueDate?: string | null | Date; // or Date
   priority: IPriority | null;

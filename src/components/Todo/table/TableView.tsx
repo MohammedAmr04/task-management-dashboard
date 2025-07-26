@@ -15,7 +15,7 @@ const TableView = () => {
     ...(progress?.data || []),
     ...(done?.data || []),
   ];
-
+  console.log("parent");
   const [debouncedLoading] = useDebounce(
     todo.isLoading || progress.isLoading || done.isLoading,
     3000
@@ -25,6 +25,18 @@ const TableView = () => {
     return (
       <div className="flex justify-center py-12">
         <Spin tip="loading" size="large" />
+      </div>
+    );
+  }
+  if (todo.isError || progress.isError || done.isError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-red-600">
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+        >
+          reload
+        </button>
       </div>
     );
   }

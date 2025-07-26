@@ -118,7 +118,7 @@ const FormModal: FC<FormModalProps> = ({
           <Input placeholder="Enter task title" />
         </Form.Item>
 
-        <Form.Item label="Description" required>
+        <Form.Item label="Description">
           <div data-color-mode="light">
             <MDEditor
               height={200}
@@ -158,7 +158,6 @@ const FormModal: FC<FormModalProps> = ({
             },
           ]}
         >
->>>>>>> 01ebbb9ca080187eb002fe7659e9da0bb0c8f73d
           <DatePicker style={{ width: "100%" }} />
         </Form.Item>
 
