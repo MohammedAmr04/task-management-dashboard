@@ -37,7 +37,12 @@ const CardTasks = ({
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <h2 className="font-semibold text-lg">{title}</h2>
+        <h2 className="font-semibold text-lg">
+          {title}{" "}
+          <span className="ml-2 rounded-full px-1 border border-border bg-card">
+            {tasks.length}
+          </span>
+        </h2>
         <button
           className=" text-text-light text-2xl cursor-pointer px-3 py-1 "
           onClick={() => setIsModalOpen(true)}
@@ -45,12 +50,14 @@ const CardTasks = ({
           <PlusOutlined />
         </button>
       </div>
+
       <FormModal
         isModalOpen={isModalOpen}
         handleCancel={() => setIsModalOpen(false)}
         handleOk={() => setIsModalOpen(false)}
         initialValues={{ status }}
       />
+
       <div ref={setNodeRef} className="grid grid-cols-1 gap-5 min-h-[120px]">
         <SortableContext
           id={status}
@@ -58,16 +65,20 @@ const CardTasks = ({
           strategy={verticalListSortingStrategy}
         >
           {tasks.length === 0 ? (
-            <div className="col-span-1 text-center text-border py-8">
-              No tasks available
+            <div
+              className="col-span-1 border-2 rounded-2xl border-dashed min-h-[120px] text-center text-border py-8 flex items-center justify-center"
+              data-testid="empty-drop-zone"
+            >
+              Drop tasks here
             </div>
           ) : (
             tasks.map((task) => <CardTask key={task.id} task={task} />)
           )}
         </SortableContext>
+
         <DragOverlay>
           {activeTask ? (
-            <CardTask key={`overlay${activeTask.id}`} task={activeTask} />
+            <CardTask key={`overlay-${activeTask.id}`} task={activeTask} />
           ) : null}
         </DragOverlay>
       </div>

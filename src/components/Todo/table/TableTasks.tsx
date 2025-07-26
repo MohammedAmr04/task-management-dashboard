@@ -62,7 +62,7 @@ const TableTasks = ({
         initialValues={{ status }}
       />
       {open && (
-        <div ref={setNodeRef} className="bg-gray-50 rounded-b-xl shadow-sm">
+        <div ref={setNodeRef} className="bg-card rounded-b-xl shadow-sm">
           <SortableContext
             id={status}
             items={tasks}

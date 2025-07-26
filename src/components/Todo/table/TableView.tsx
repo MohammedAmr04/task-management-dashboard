@@ -1,17 +1,33 @@
+import { Spin } from "antd";
 import { useTasksByStatus } from "../../../services/api/todo";
 import type { IStatus } from "../../../services/types";
 import DndProvider from "../shared/DndProvider";
 import TableTasks from "./TableTasks";
+import { useDebounce } from "use-debounce";
 
 const TableView = () => {
   const todo = useTasksByStatus("to-do");
   const progress = useTasksByStatus("in-progress");
   const done = useTasksByStatus("done");
+
   const allTasks = [
     ...(todo?.data || []),
     ...(progress?.data || []),
     ...(done?.data || []),
   ];
+
+  const [debouncedLoading] = useDebounce(
+    todo.isLoading || progress.isLoading || done.isLoading,
+    3000
+  );
+
+  if (debouncedLoading) {
+    return (
+      <div className="flex justify-center py-12">
+        <Spin tip="loading" size="large" />
+      </div>
+    );
+  }
 
   const getNewPosition = (
     taskId: string,
@@ -23,18 +39,16 @@ const TableView = () => {
       .sort((a, b) => a.position - b.position);
 
     if (destinationTasks.length === 0) {
-      return 1; // مفيش ولا تاسك في الليستة
+      return 1;
     }
 
     if (!overId) {
-      // لو مستخدم سحب التاسك و سابه في المساحة الفاضية (يعني في الآخر)
       return destinationTasks[destinationTasks.length - 1].position + 1;
     }
 
     const overIndex = destinationTasks.findIndex((t) => t.id === overId);
 
     if (overIndex === -1) {
-      // احتياطي لو حصلت مشكلة
       return destinationTasks[destinationTasks.length - 1].position + 1;
     }
 
@@ -42,17 +56,14 @@ const TableView = () => {
     const overTask = destinationTasks[overIndex];
     const after = destinationTasks[overIndex + 1];
 
-    // لو عايز تحطه في أول الليستة
     if (!before) {
       return overTask.position - 1;
     }
 
-    // لو عايز تحطه في آخر الليستة
     if (!after) {
       return overTask.position + 1;
     }
 
-    // لو بين before و overTask
     return (before.position + overTask.position) / 2;
   };
 

@@ -2,16 +2,32 @@ import CardTasks from "./CardTasks";
 import { useTasksByStatus } from "../../../services/api/todo/tasks-query";
 import DndProvider from "../shared/DndProvider";
 import type { IStatus } from "../../../services/types";
+import { Spin } from "antd";
+import { useDebounce } from "use-debounce";
 
 const CardView = () => {
   const todo = useTasksByStatus("to-do");
   const progress = useTasksByStatus("in-progress");
   const done = useTasksByStatus("done");
+
   const allTasks = [
     ...(todo?.data || []),
     ...(progress?.data || []),
     ...(done?.data || []),
   ];
+
+  const [debouncedLoading] = useDebounce(
+    todo.isLoading || progress.isLoading || done.isLoading,
+    3000
+  );
+
+  if (debouncedLoading) {
+    return (
+      <div className="flex justify-center items-center h-80">
+        <Spin tip="loading" size="large" />
+      </div>
+    );
+  }
 
   const getNewPosition = (
     taskId: string,

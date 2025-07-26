@@ -99,15 +99,11 @@ const FormModal: FC<FormModalProps> = ({
           </div>
         </Form.Item>
 
-        <Form.Item
-          name="assignee"
-          label="Assignee"
-          rules={[{ required: true }]}
-        >
+        <Form.Item name="assignee" label="Assignee">
           <Input placeholder="Enter assignee name" />
         </Form.Item>
 
-        <Form.Item name="dueDate" label="Due Date" rules={[{ required: true }]}>
+        <Form.Item name="dueDate" label="Due Date">
           <DatePicker style={{ width: "100%" }} />
         </Form.Item>
 

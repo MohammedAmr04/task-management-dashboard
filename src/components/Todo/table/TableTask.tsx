@@ -6,11 +6,13 @@ import {
 import { useState } from "react";
 import type { ITask } from "../../../services/types";
 import EditTask from "../editTask/EditTask";
-import { Flag } from "@phosphor-icons/react";
+import { CheckSquare, Flag, UsersThree } from "@phosphor-icons/react";
 import { CiCircleCheck } from "react-icons/ci";
 import { useUpdateTask } from "../../../services/api/todo/tasks-query";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import dayjs from "dayjs";
+import { Calendar } from "@phosphor-icons/react";
 
 const TableTask = ({ task }: { task: ITask }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -58,6 +60,7 @@ const TableTask = ({ task }: { task: ITask }) => {
 
     mutate({ id: task.id, task: updatedFields });
   };
+  const tasksFinished = task.subTasks?.filter((task) => task.finished === true);
 
   return (
     <div
@@ -113,15 +116,33 @@ const TableTask = ({ task }: { task: ITask }) => {
               <span className="tag tag-success">{task.tags[0]}</span>
             </div>
           )}
+          <span className="text-xs ms-1 flex items-center gap-1 font-semibold text-text-light">
+            {task.subTasks && task.subTasks?.length > 0 && (
+              <>
+                <CheckSquare size={18} weight="bold" />
+                {tasksFinished?.length}/{task.subTasks?.length}
+              </>
+            )}
+          </span>
         </div>
 
         {/* Right Side Columns */}
         <ul className="flex list-none text-text border-r border-border font-medium">
           <li className="w-24 text-center py-2 border-r border-border">
-            {task?.assignee}
+            {task.assignee ? (
+              <span className=" tag tag-warning">
+                {task.assignee.substring(0, 2)}
+              </span>
+            ) : (
+              <UsersThree size={18} />
+            )}
           </li>
           <li className="w-28 text-center py-2 border-r border-border">
-            {task.dueDate.substring(0, 10)}
+            {task.dueDate ? (
+              dayjs(task.dueDate).format("D MMM'YY")
+            ) : (
+              <Calendar size={32} />
+            )}
           </li>
           <li className="w-24 text-center text-2xl flex justify-center border-r py-2 border-border">
             <Flag

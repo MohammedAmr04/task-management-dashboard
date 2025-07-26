@@ -15,8 +15,8 @@ export interface ITask {
   id: string;
   title: string;
   description?: string;
-  assignee: string;
-  dueDate: string; // or Date
+  assignee?: string;
+  dueDate?: string | Date; // or Date
   priority: IPriority | null;
   status: IStatus;
   position: number;

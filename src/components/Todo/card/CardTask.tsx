@@ -5,6 +5,8 @@ import { CheckSquare } from "@phosphor-icons/react";
 import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
 import EditTask from "../editTask/EditTask";
+import dayjs from "dayjs";
+import { Calendar } from "@phosphor-icons/react";
 
 const CardTask = ({ task }: { task: ITask }) => {
   const {
@@ -71,8 +73,12 @@ const CardTask = ({ task }: { task: ITask }) => {
             task.subTasks?.length > 0 &&
             `${tasksFinished?.length}/${task.subTasks?.length}`}{" "}
         </span>
-        <span className="text-xs self-end font-semibold text-text-light">
-          {task.dueDate?.substring(0, 10)}
+        <span className="text-xs flex items-center gap-1 font-semibold text-text-light">
+          {task.dueDate && (
+            <>
+              <Calendar size={18} /> {dayjs(task.dueDate).format("D MMM'YY")}
+            </>
+          )}
         </span>
       </div>
       <EditTask
