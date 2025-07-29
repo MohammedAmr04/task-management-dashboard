@@ -1,25 +1,34 @@
 import { Spin } from "antd";
 import { useTasksByStatus } from "../../../services/api/todo";
-import type { IStatus } from "../../../services/types";
+import type { ITask } from "../../../services/types";
 import DndProvider from "../shared/DndProvider";
 import TableTasks from "./TableTasks";
 import { useDebounce } from "use-debounce";
+import { useMemo, useState } from "react";
+import EditTask from "../shared/editTask/EditTask";
+import TodoError from "../shared/TodoError";
 
 const TableView = () => {
   const todo = useTasksByStatus("to-do");
   const progress = useTasksByStatus("in-progress");
   const done = useTasksByStatus("done");
+  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
 
-  const allTasks = [
-    ...(todo?.data || []),
-    ...(progress?.data || []),
-    ...(done?.data || []),
-  ];
+  //use memo
+  const allTasks = useMemo(() => {
+    return [
+      ...(todo?.data || []),
+      ...(progress?.data || []),
+      ...(done?.data || []),
+    ];
+  }, [todo?.data, progress?.data, done?.data]);
+
   console.log("parent");
   const [debouncedLoading] = useDebounce(
     todo.isLoading || progress.isLoading || done.isLoading,
     3000
   );
+  //use memo
 
   if (debouncedLoading) {
     return (
@@ -28,76 +37,53 @@ const TableView = () => {
       </div>
     );
   }
-  if (todo.isError || progress.isError || done.isError) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-red-600">
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-        >
-          reload
-        </button>
-      </div>
-    );
+  if (todo.isError) {
+    return <TodoError error={todo.error} refetch={todo.refetch} />;
   }
-
-  const getNewPosition = (
-    taskId: string,
-    newStatus: IStatus,
-    overId: string | null
-  ): number => {
-    const destinationTasks = allTasks
-      .filter((t) => t.status === newStatus && t.id !== taskId)
-      .sort((a, b) => a.position - b.position);
-
-    if (destinationTasks.length === 0) {
-      return 1;
-    }
-
-    if (!overId) {
-      return destinationTasks[destinationTasks.length - 1].position + 1;
-    }
-
-    const overIndex = destinationTasks.findIndex((t) => t.id === overId);
-
-    if (overIndex === -1) {
-      return destinationTasks[destinationTasks.length - 1].position + 1;
-    }
-
-    const before = destinationTasks[overIndex - 1];
-    const overTask = destinationTasks[overIndex];
-    const after = destinationTasks[overIndex + 1];
-
-    if (!before) {
-      return overTask.position - 1;
-    }
-
-    if (!after) {
-      return overTask.position + 1;
-    }
-
-    return (before.position + overTask.position) / 2;
-  };
+  if (progress.isError) {
+    return <TodoError error={progress.error} refetch={progress.refetch} />;
+  }
+  if (done.isError) {
+    return <TodoError error={done.error} refetch={done.refetch} />;
+  }
 
   return (
     <section className="max-w-7xl mx-auto">
-      <header className="flex justify-between items-center px-4 py-2 bg-card rounded-md shadow-sm mb-2">
+      <header className="flex flex-col sm:flex-row justify-between items-center px-4 py-2 bg-card rounded-md shadow-sm mb-2">
         <div className="flex-1 font-semibold text-text">To Do Name</div>
-        <ul className="flex list-none text-text font-medium">
-          <li className="w-24 text-center">Assignee</li>
-          <li className="w-28 text-center">Due Date</li>
-          <li className="w-24 text-center">Priority</li>
+        <ul className="flex w-100  list-none gap-5 sm:justify-start  justify-between text-text font-medium">
+          <li className="sm:w-24 text-center">Assignee</li>
+          <li className="sm:w-28 text-center">Due Date</li>
+          <li className="sm:w-24 text-center">Priority</li>
         </ul>
       </header>
-      <DndProvider getNewPosition={getNewPosition}>
-        <TableTasks title="To Do" tasks={todo?.data || []} status="to-do" />
+      <DndProvider allTasks={allTasks}>
+        <TableTasks
+          title="To Do"
+          onSelect={(task) => setSelectedTask(task)}
+          tasks={todo?.data || []}
+          status="to-do"
+        />
         <TableTasks
           title="In Progress"
           tasks={progress?.data || []}
           status="in-progress"
+          onSelect={(task) => setSelectedTask(task)}
         />
-        <TableTasks title="Done" tasks={done?.data || []} status="done" />
+        <TableTasks
+          onSelect={(task) => setSelectedTask(task)}
+          title="Done"
+          tasks={done?.data || []}
+          status="done"
+        />
       </DndProvider>
+      {selectedTask && (
+        <EditTask
+          isOpen={!!selectedTask}
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+        />
+      )}
     </section>
   );
 };

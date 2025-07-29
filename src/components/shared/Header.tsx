@@ -9,8 +9,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import user from "../../assets/user.jpg";
 import { useState } from "react";
 import { useSearchTasks } from "../../services/api/todo/tasks-query";
-import EditTask from "../Todo/editTask/EditTask";
-import FormModal from "./../Todo/form/FormModel";
+import EditTask from "../Todo/shared/editTask/EditTask";
+import FormModal from "../Todo/shared/form/FormModel";
 import type { ITask } from "./../../services/types/types";
 import { useDebounce } from "use-debounce";
 

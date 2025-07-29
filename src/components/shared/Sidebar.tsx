@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MdDashboard,
@@ -37,58 +37,99 @@ const items = [
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleClick = (path: string) => {
     navigate(path);
+    setIsMobileOpen(false); // close sidebar on mobile after click
   };
 
-  return (
-    <div
-      className={`h-screen bg-card sticky top-0 shadow-md transition-all duration-300 ${
-        collapsed ? "w-20" : "w-64"
-      } flex flex-col`}
-    >
-      <div
-        className={`flex items-center justify-between ${
-          collapsed ? "py-4" : "p-4"
-        }  border-b border-border`}
-      >
-        <h1
-          className={`uppercase font-bold transition-all duration-300 ${
-            collapsed ? "text-xl mx-auto" : "text-3xl mx-auto"
-          }`}
-        >
-          Task<span className="text-primary normal-case">.ai</span>
-        </h1>
-      </div>
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileOpen(false); // hide mobile menu on larger screens
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-      <nav className="flex-1 p-2 space-y-1 relative">
-        {items.map((item) => (
-          <div
-            key={item.key}
-            // className={`flex items-center p-3 mb-2 ${
-            //   collapsed ? "justify-center pl-6.5" : "ps-9 "
-            // } rounded-lg hover:bg-primary hover:text-card cursor-pointer transition-all`}
-            className={`flex items-center   ${
-              collapsed ? "py-3 ps-2.5 justify-center" : "p-3 ps-9"
-            }  mb-2 border-l-3 border-transparent hover:border-primary   rounded-lg hover:bg-tag-bg-danger hover:text-primary cursor-pointer transition-all`}
-            onClick={() => handleClick(item.path)}
-          >
-            <span className="text-xl me-4">{item.icon}</span>
-            {!collapsed && (
-              <span className="text-xl font-medium">{item.label}</span>
-            )}
-          </div>
-        ))}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className=" text-2xl py-3 mb-2 px-0 absolute start-[50%] translate-x-[-50%]  cursor-pointer transition-all"
+  return (
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden absolute top-5 text-3xl p-4"
+        onClick={() => setIsMobileOpen(true)}
+      >
+        <MdMenu />
+      </button>
+
+      {/* Sidebar */}
+      <aside
+        className={`bg-card shadow-md transition-all duration-300 flex flex-col md:sticky fixed top-0 h-screen z-50
+        ${collapsed ? "w-20" : "w-64"} 
+        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} 
+        md:translate-x-0 md:flex 
+        `}
+      >
+        {/* Header */}
+        <div
+          className={`flex items-center justify-between ${
+            collapsed ? "py-4" : "p-4"
+          } border-b border-border`}
         >
-          {collapsed ? <MdMenu /> : <MdClose />}
-        </button>
-      </nav>
-    </div>
+          <h1
+            className={`uppercase font-bold transition-all duration-300 ${
+              collapsed ? "text-xl mx-auto" : "text-3xl mx-auto"
+            }`}
+          >
+            Task<span className="text-primary normal-case">.ai</span>
+          </h1>
+
+          {/* Close Button on Mobile */}
+          <button
+            className="md:hidden text-2xl absolute top-4 right-4"
+            onClick={() => setIsMobileOpen(false)}
+          >
+            <MdClose />
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-2 space-y-1 relative">
+          {items.map((item) => (
+            <div
+              key={item.key}
+              className={`flex items-center ${
+                collapsed ? "py-3 ps-2.5 justify-center" : "p-3 ps-9"
+              } mb-2 border-l-3 border-transparent hover:border-primary rounded-lg hover:bg-tag-bg-danger hover:text-primary cursor-pointer transition-all`}
+              onClick={() => handleClick(item.path)}
+            >
+              <span className="text-xl me-4">{item.icon}</span>
+              {!collapsed && (
+                <span className="text-xl font-medium">{item.label}</span>
+              )}
+            </div>
+          ))}
+          {/* Collapse/Expand Toggle */}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="text-2xl py-3 mb-2 px-0 absolute start-[50%] translate-x-[-50%] cursor-pointer transition-all hidden md:block"
+          >
+            {collapsed ? <MdMenu /> : <MdClose />}
+          </button>
+        </nav>
+      </aside>
+
+      {/* Background Overlay when Sidebar is open on mobile */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0   bg-text bg-opacity-40 z-40 md:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

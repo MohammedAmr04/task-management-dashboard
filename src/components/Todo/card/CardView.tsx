@@ -1,20 +1,26 @@
 import CardTasks from "./CardTasks";
 import { useTasksByStatus } from "../../../services/api/todo/tasks-query";
 import DndProvider from "../shared/DndProvider";
-import type { IStatus } from "../../../services/types";
 import { Spin } from "antd";
 import { useDebounce } from "use-debounce";
+import { useMemo, useState } from "react";
+import TodoError from "../shared/TodoError";
+import type { ITask } from "../../../services/types";
+import EditTask from "../shared/editTask/EditTask";
 
 const CardView = () => {
   const todo = useTasksByStatus("to-do");
   const progress = useTasksByStatus("in-progress");
   const done = useTasksByStatus("done");
+  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
 
-  const allTasks = [
-    ...(todo?.data || []),
-    ...(progress?.data || []),
-    ...(done?.data || []),
-  ];
+  const allTasks = useMemo(() => {
+    return [
+      ...(todo?.data || []),
+      ...(progress?.data || []),
+      ...(done?.data || []),
+    ];
+  }, [todo?.data, progress?.data, done?.data]);
 
   const [debouncedLoading] = useDebounce(
     todo.isLoading || progress.isLoading || done.isLoading,
@@ -29,68 +35,47 @@ const CardView = () => {
     );
   }
 
-  const getNewPosition = (
-    taskId: string,
-    newStatus: IStatus,
-    overId: string | null
-  ): number => {
-    const destinationTasks = allTasks
-      .filter((t) => t.status === newStatus && t.id !== taskId)
-      .sort((a, b) => a.position - b.position);
-
-    if (destinationTasks.length === 0) {
-      return 1;
-    }
-
-    if (!overId) {
-      return destinationTasks[destinationTasks.length - 1].position + 1;
-    }
-
-    const overIndex = destinationTasks.findIndex((t) => t.id === overId);
-
-    if (overIndex === -1) {
-      return destinationTasks[destinationTasks.length - 1].position + 1;
-    }
-
-    const before = destinationTasks[overIndex - 1];
-    const overTask = destinationTasks[overIndex];
-    const after = destinationTasks[overIndex + 1];
-
-    if (!before) {
-      return overTask.position - 1;
-    }
-
-    if (!after) {
-      return overTask.position + 1;
-    }
-
-    return (before.position + overTask.position) / 2;
-  };
-  if (todo.isError || progress.isError || done.isError) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-red-600">
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-        >
-          reload
-        </button>
-      </div>
-    );
+  if (todo.isError) {
+    return <TodoError error={todo.error} refetch={todo.refetch} />;
   }
+  if (progress.isError) {
+    return <TodoError error={progress.error} refetch={progress.refetch} />;
+  }
+  if (done.isError) {
+    return <TodoError error={done.error} refetch={done.refetch} />;
+  }
+
   return (
     <div className="max-w-7xl mx-auto py-4">
-      <DndProvider getNewPosition={getNewPosition}>
+      <DndProvider allTasks={allTasks}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <CardTasks title="To Do" tasks={todo.data || []} status="to-do" />
+          <CardTasks
+            title="To Do"
+            onSelect={setSelectedTask}
+            tasks={todo.data || []}
+            status="to-do"
+          />
           <CardTasks
             title="In Progress"
             tasks={progress.data || []}
             status="in-progress"
+            onSelect={setSelectedTask}
           />
-          <CardTasks title="Done" tasks={done.data || []} status="done" />
+          <CardTasks
+            onSelect={setSelectedTask}
+            title="Done"
+            tasks={done.data || []}
+            status="done"
+          />
         </div>
       </DndProvider>
+      {selectedTask && (
+        <EditTask
+          isOpen={!!selectedTask}
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+        />
+      )}
     </div>
   );
 };

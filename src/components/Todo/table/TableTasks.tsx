@@ -4,8 +4,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import TableTask from "./TableTask";
-import { useState } from "react";
-import FormModal from "../form/FormModel";
+import { useState, type Dispatch } from "react";
+import FormModal from "../shared/form/FormModel";
 import { CaretDownOutlined, CaretRightOutlined } from "@ant-design/icons";
 import type { IStatus, ITask } from "../../../services/types";
 
@@ -13,10 +13,12 @@ const TableTasks = ({
   title,
   tasks,
   status,
+  onSelect,
 }: {
   title: string;
   tasks: ITask[];
   status: IStatus;
+  onSelect: Dispatch<React.SetStateAction<ITask | null>>;
 }) => {
   const [open, setOpen] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,8 +29,7 @@ const TableTasks = ({
   useDndMonitor({
     onDragStart: (event) => {
       const id = event.active?.id;
-      console.log("id", id);
-      console.log("e", event);
+
       if (id) {
         const found = tasks.find((t) => t.id === id);
         if (found) setActiveTask(found);
@@ -74,7 +75,9 @@ const TableTasks = ({
                 No tasks in this column
               </div>
             ) : (
-              tasks.map((task) => <TableTask key={task.id} task={task} />)
+              tasks.map((task) => (
+                <TableTask onSelect={onSelect} key={task.id} task={task} />
+              ))
             )}
           </SortableContext>
           <DragOverlay>
@@ -85,7 +88,11 @@ const TableTasks = ({
                   opacity: 0.9,
                 }}
               >
-                <TableTask key={`overlay${activeTask.id}`} task={activeTask} />
+                <TableTask
+                  onSelect={onSelect}
+                  key={`overlay${activeTask.id}`}
+                  task={activeTask}
+                />
               </div>
             ) : null}
           </DragOverlay>

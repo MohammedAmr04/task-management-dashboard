@@ -5,18 +5,20 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable, DragOverlay, useDndMonitor } from "@dnd-kit/core";
-import { useState } from "react";
-import FormModal from "../form/FormModel";
+import { useState, type Dispatch } from "react";
+import FormModal from "../shared/form/FormModel";
 import { PlusOutlined } from "@ant-design/icons";
 
 const CardTasks = ({
   title,
   tasks,
   status,
+  onSelect,
 }: {
   title: string;
   tasks: ITask[];
   status: IStatus;
+  onSelect: Dispatch<React.SetStateAction<ITask | null>>;
 }) => {
   const { setNodeRef } = useDroppable({ id: status });
   const [activeTask, setActiveTask] = useState<ITask | null>(null);
@@ -72,7 +74,9 @@ const CardTasks = ({
               Drop tasks here
             </div>
           ) : (
-            tasks.map((task) => <CardTask key={task.id} task={task} />)
+            tasks.map((task) => (
+              <CardTask onSelect={onSelect} key={task.id} task={task} />
+            ))
           )}
         </SortableContext>
 
@@ -85,7 +89,11 @@ const CardTasks = ({
                 opacity: 0.9,
               }}
             >
-              <CardTask key={`overlay-${activeTask.id}`} task={activeTask} />
+              <CardTask
+                onSelect={onSelect}
+                key={`overlay-${activeTask.id}`}
+                task={activeTask}
+              />
             </div>
           ) : null}
         </DragOverlay>

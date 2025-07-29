@@ -3,12 +3,17 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { CheckSquare, UsersThree } from "@phosphor-icons/react";
 import MDEditor from "@uiw/react-md-editor";
-import { useState } from "react";
-import EditTask from "../editTask/EditTask";
+import { memo } from "react";
 import dayjs from "dayjs";
 import { Calendar } from "@phosphor-icons/react";
 
-const CardTask = ({ task }: { task: ITask }) => {
+const CardTask = ({
+  task,
+  onSelect,
+}: {
+  task: ITask;
+  onSelect: (t: ITask) => void;
+}) => {
   const {
     attributes,
     listeners,
@@ -23,12 +28,6 @@ const CardTask = ({ task }: { task: ITask }) => {
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
   const tasksFinished = task.subTasks?.filter((task) => task.finished === true);
   return (
     <div
@@ -38,13 +37,13 @@ const CardTask = ({ task }: { task: ITask }) => {
       {...attributes}
       className="bg-card border !opacity-100 border-border py-4 rounded-xl shadow-sm  flex flex-col gap-2 cursor-move"
       onClick={() => {
-        showModal();
+        onSelect(task);
       }}
     >
-      <div className="font-semibold px-4 text-text text-lg">{task.title}</div>
-      <div className="px-4 ">
+      <h3 className="font-semibold px-4 text-text text-lg">{task.title}</h3>
+      <div className="px-4 line-clamp-4 ">
         <MDEditor.Markdown
-          className="text-sm !text-text-light !bg-transparent"
+          className="text-sm !text-text-light line-clamp-4 !bg-transparent"
           source={task.description}
         />
       </div>
@@ -88,15 +87,8 @@ const CardTask = ({ task }: { task: ITask }) => {
           )}
         </span>
       </div>
-      <EditTask
-        task={task}
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-        }}
-      />
     </div>
   );
 };
 
-export default CardTask;
+export default memo(CardTask);

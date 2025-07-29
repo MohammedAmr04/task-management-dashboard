@@ -3,9 +3,8 @@ import {
   CaretRightOutlined,
   HolderOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { memo, useState } from "react";
 import type { ITask } from "../../../services/types";
-import EditTask from "../editTask/EditTask";
 import { CheckSquare, Flag, UsersThree } from "@phosphor-icons/react";
 import { CiCircleCheck } from "react-icons/ci";
 import { useUpdateTask } from "../../../services/api/todo/tasks-query";
@@ -14,9 +13,15 @@ import { CSS } from "@dnd-kit/utilities";
 import dayjs from "dayjs";
 import { Calendar } from "@phosphor-icons/react";
 
-const TableTask = ({ task }: { task: ITask }) => {
+const TableTask = ({
+  task,
+  onSelect,
+}: {
+  task: ITask;
+  onSelect: (t: ITask) => void;
+}) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutate } = useUpdateTask();
   // DND-kit
   const {
@@ -71,7 +76,7 @@ const TableTask = ({ task }: { task: ITask }) => {
         ref={setNodeRef}
         style={style}
         className={`px-4 border-y border-border task bg-card !opacity-100 group relative`}
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => onSelect(task)}
       >
         <div
           className="absolute left-3 top-1/2 bg-background-dark p-1 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-300 transition-opacity cursor-move"
@@ -80,9 +85,9 @@ const TableTask = ({ task }: { task: ITask }) => {
         >
           <HolderOutlined className="text-border text-lg" />
         </div>
-        <div className="flex">
+        <div className="flex flex-col md:flex-row">
           {/* Task Title Column */}
-          <div className="flex-1 flex py-2 items-center font-semibold border-r border-border text-text pl-6">
+          <div className="flex-1 flex py-2 items-center font-semibold md:border-r border-border text-text md:pl-6">
             {!open && (
               <span className="cursor-pointer me-1" onClick={toggleCaret}>
                 <CaretRightOutlined />
@@ -115,7 +120,9 @@ const TableTask = ({ task }: { task: ITask }) => {
             </span>
             {task?.tags && task.tags.length > 0 && (
               <div className="ms-3">
-                <span className="tag tag-success">{task.tags[0]}</span>
+                <span className="hidden md:block tag tag-success">
+                  {task.tags[0]}
+                </span>
               </div>
             )}
             <span className="text-xs ms-1 flex items-center gap-1 font-semibold text-text-light">
@@ -163,14 +170,8 @@ const TableTask = ({ task }: { task: ITask }) => {
           </div>
         </div>
       </div>
-
-      <EditTask
-        task={task}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </>
   );
 };
 
-export default TableTask;
+export default memo(TableTask);
