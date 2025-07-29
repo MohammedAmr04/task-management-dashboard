@@ -17,8 +17,8 @@ import type {
   IPriority,
   IStatus,
   ISubTask,
-} from "../../../services/types/types";
-import { useCreateTask } from "../../../services/api/todo";
+} from "../../../../services/types/types";
+import { useCreateTask } from "../../../../services/api/todo";
 import MDEditor, { commands } from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";

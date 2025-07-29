@@ -12,13 +12,13 @@ import {
 } from "antd";
 import { EditOutlined, CheckOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { useUpdateTask } from "../../../services/api/todo/tasks-query";
+import { useUpdateTask } from "../../../../services/api/todo/tasks-query";
 import type {
   IStatus,
   ISubTask,
   ITask,
   IComment,
-} from "../../../services/types";
+} from "../../../../services/types";
 import MDEditor from "@uiw/react-md-editor";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
@@ -54,11 +54,7 @@ const EditTask = ({
     </Modal>
   );
 };
-const EditTaskContent = ({
-  task,
-}: {
-  task: ITask;
-}) => {
+const EditTaskContent = ({ task }: { task: ITask }) => {
   const [tabKey, setTabKey] = useState("comments");
   const { mutate } = useUpdateTask();
 
@@ -108,7 +104,7 @@ const EditTaskContent = ({
     );
     handleUpdate("subTasks", updated);
   };
-  
+
   return (
     <div>
       <div className="flex justify-between items-center gap-2">
@@ -249,7 +245,7 @@ const EditTaskContent = ({
                 <span>{sub.title}</span>
                 <CiCircleCheck
                   className={`text-lg cursor-pointer rounded-full ${
-                    sub.finished ? "text-primary" : "text-gray-400"
+                    sub.finished ? "text-primary" : "text-border"
                   }`}
                 />
               </List.Item>
