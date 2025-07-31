@@ -1,9 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles/global.css";
-
 import { Suspense, lazy } from "react";
 import { Spin } from "antd";
 import { Auth0ProviderWithNavigate } from "./services/context/AuthProvider";
+import Unauthorized from "./pages/UnAuthorized";
+import ProtectedRoute from "./services/protectedroutes/ProtectedRoute";
 
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
 const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage"));
@@ -31,12 +32,29 @@ function App() {
         <Auth0ProviderWithNavigate>
           <Routes>
             <Route path="/" element={<MainLayout />}>
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/history" element={<HistoryPage />} />
-              <Route path="/report" element={<ReportPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/todo" element={<ToDoPage />}>
+              <Route
+                path="analytics"
+                element={
+                  <ProtectedRoute allowedRoles={["Admin"]}>
+                    <AnalyticsPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="history" element={<HistoryPage />} />
+              <Route path="report" element={<ReportPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="unauthorized" element={<Unauthorized />} />
+
+              <Route
+                path="todo"
+                element={
+                  <ProtectedRoute allowedRoles={["Regular user", "Admin"]}>
+                    <ToDoPage />
+                  </ProtectedRoute>
+                }
+              >
                 <Route index element={<TableView />} />
                 <Route path="table-view" element={<TableView />} />
                 <Route path="card-view" element={<CardView />} />

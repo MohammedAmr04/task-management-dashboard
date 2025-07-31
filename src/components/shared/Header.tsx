@@ -1,4 +1,4 @@
-import { Button, Input, Segmented, List } from "antd";
+import { Button, Input, Segmented, List, Spin } from "antd";
 import {
   SearchOutlined,
   TableOutlined,
@@ -13,6 +13,9 @@ import EditTask from "../Todo/shared/editTask/EditTask";
 import FormModal from "../Todo/shared/form/FormModel";
 import type { ITask } from "./../../services/types/types";
 import { useDebounce } from "use-debounce";
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginButton from "./LoginButton";
+import LogoutButton from "./LogoutButton";
 
 const Header = () => {
   const location = useLocation();
@@ -20,24 +23,16 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
   const [searchValue, setSearchValue] = useState("");
-  const [debouncedSearchValue] = useDebounce(searchValue, 500); // 500ms delay
-
+  const [debouncedSearchValue] = useDebounce(searchValue, 500);
+  const { user: userAuth, isAuthenticated, isLoading, error } = useAuth0();
   const { data: searchResults, isLoading: searchLoading } =
     useSearchTasks(debouncedSearchValue);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const showModal = () => setIsModalOpen(true);
+  const handleOk = () => setIsModalOpen(false);
+  const handleCancel = () => setIsModalOpen(false);
 
   const isTodoPage = location.pathname.startsWith("/todo");
-
   const currentTab = location.pathname.includes("card-view")
     ? "card-view"
     : "table-view";
@@ -66,14 +61,34 @@ const Header = () => {
             onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
-        <div className="flex items-center w-40 gap-4">
+
+        <div className="flex items-center w-56 gap-4">
           <BellOutlined style={{ fontSize: "1.2rem" }} />
           <div className="flex items-center space-x-2">
-            <img src={user} alt="avatar" className="rounded-full size-8" />
-            <div className="flex flex-col text-[8px]">
-              <p>Workspace</p>
-              <p>brazilyy</p>
-            </div>
+            {isLoading && (
+              <span className="text-xs text-border">
+                <Spin size="small" />
+              </span>
+            )}
+            {error && (
+              <span className="text-xs text-primary">
+                Error: {error.message || "Something went wrong"}
+              </span>
+            )}
+
+            {!isLoading && !error && (
+              <>
+                {!isAuthenticated && <LoginButton />}
+                {isAuthenticated && <LogoutButton />}
+                <img src={user} alt="avatar" className="rounded-full size-8" />
+                <div className="flex flex-col text-[8px]">
+                  <p>Workspace</p>
+                  <p className="text-xs text-primary italic font-semibold">
+                    {userAuth ? userAuth?.nickname : "User"}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -100,7 +115,6 @@ const Header = () => {
         </div>
       )}
 
-      {/* EditTask Modal for search result */}
       {selectedTask && (
         <EditTask
           task={selectedTask}

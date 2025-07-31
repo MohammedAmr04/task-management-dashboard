@@ -10,10 +10,6 @@ import {
   MdMenu,
   MdClose,
 } from "react-icons/md";
-import { useAuth0 } from "@auth0/auth0-react";
-import LogoutButton from "./LogoutButton";
-import LoginButton from "./LoginButton";
-import { Spin } from "antd";
 
 const items = [
   {
@@ -43,7 +39,6 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, isAuthenticated, isLoading, error } = useAuth0();
 
   const handleClick = (path: string) => {
     navigate(path);
@@ -103,27 +98,7 @@ const Sidebar = () => {
 
         {/* Navigation */}
         <nav className="flex-1 p-2 space-y-1 relative">
-          {error && (
-            <p className="text-danger text-center mt-4">{error.message}</p>
-          )}
-          {!error && isLoading && (
-            <div className="flex items-center justify-center my-4">
-              <Spin size="small" />
-            </div>
-          )}
-          {!error && !isLoading && isAuthenticated && (
-            <div className="flex flex-col md:flex-row items-center justify-center gap-2 px-1 md:px-3 mb-4 text-center">
-              <img
-                src={user?.picture}
-                alt={user?.name}
-                className="rounded-full size-6 inline-block"
-              />
-              <span>{user?.name}</span>
-            </div>
-          )}
-          <div className="mx-0 md:mx-4 px-1 md:px-3">
-            {isAuthenticated ? <LogoutButton /> : <LoginButton />}
-          </div>
+
           {items.map((item) => (
             <div
               key={item.key}
