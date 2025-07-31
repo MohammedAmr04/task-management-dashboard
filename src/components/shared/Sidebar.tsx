@@ -98,6 +98,7 @@ const Sidebar = () => {
 
         {/* Navigation */}
         <nav className="flex-1 p-2 space-y-1 relative">
+
           {items.map((item) => (
             <div
               key={item.key}

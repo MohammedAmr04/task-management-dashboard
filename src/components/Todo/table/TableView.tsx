@@ -40,9 +40,11 @@ const TableView = () => {
   if (todo.isError) {
     return <TodoError error={todo.error} refetch={todo.refetch} />;
   }
+
   if (progress.isError) {
     return <TodoError error={progress.error} refetch={progress.refetch} />;
   }
+
   if (done.isError) {
     return <TodoError error={done.error} refetch={done.refetch} />;
   }

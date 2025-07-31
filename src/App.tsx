@@ -1,8 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./styles/global.css";
-
 import { Suspense, lazy } from "react";
 import { Spin } from "antd";
+import { Auth0ProviderWithNavigate } from "./services/context/AuthProvider";
+import ProtectedRoute from "./services/protectedroutes/ProtectedRoute";
 
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
 const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage"));
@@ -13,6 +14,7 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const ToDoPage = lazy(() => import("./pages/ToDoPage"));
 const TableView = lazy(() => import("./components/Todo/table/TableView"));
 const CardView = lazy(() => import("./components/Todo/card/CardView"));
+import Unauthorized from "./pages/Unauthorized";
 
 function App() {
   return (
@@ -27,20 +29,39 @@ function App() {
       }
     >
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route path="/analytics" element={<AnalyticsPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/history" element={<HistoryPage />} />
-            <Route path="/report" element={<ReportPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/todo" element={<ToDoPage />}>
-              <Route index element={<TableView />} />
-              <Route path="table-view" element={<TableView />} />
-              <Route path="card-view" element={<CardView />} />
+        <Auth0ProviderWithNavigate>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route
+                path="analytics"
+                element={
+                  <ProtectedRoute allowedRoles={["Admin"]}>
+                    <AnalyticsPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="history" element={<HistoryPage />} />
+              <Route path="report" element={<ReportPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="unauthorized" element={<Unauthorized />} />
+
+              <Route
+                path="todo"
+                element={
+                  <ProtectedRoute allowedRoles={["Regular user", "Admin"]}>
+                    <ToDoPage />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<TableView />} />
+                <Route path="table-view" element={<TableView />} />
+                <Route path="card-view" element={<CardView />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </Auth0ProviderWithNavigate>
       </BrowserRouter>
     </Suspense>
   );
