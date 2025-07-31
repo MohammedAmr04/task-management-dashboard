@@ -1,4 +1,3 @@
-// Unauthorized.tsx
 const Unauthorized = () => {
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>

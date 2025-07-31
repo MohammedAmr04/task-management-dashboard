@@ -3,7 +3,6 @@ import "./styles/global.css";
 import { Suspense, lazy } from "react";
 import { Spin } from "antd";
 import { Auth0ProviderWithNavigate } from "./services/context/AuthProvider";
-import Unauthorized from "./pages/UnAuthorized";
 import ProtectedRoute from "./services/protectedroutes/ProtectedRoute";
 
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
@@ -15,6 +14,7 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const ToDoPage = lazy(() => import("./pages/ToDoPage"));
 const TableView = lazy(() => import("./components/Todo/table/TableView"));
 const CardView = lazy(() => import("./components/Todo/card/CardView"));
+import Unauthorized from "./pages/Unauthorized";
 
 function App() {
   return (
