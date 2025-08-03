@@ -11,7 +11,7 @@ const ProtectedRoute = ({
   children: ReactNode;
   allowedRoles?: string[];
 }) => {
-  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
+  const { isAuthenticated, isLoading, user } = useAuth0();
 
   if (isLoading)
     return (
@@ -21,8 +21,7 @@ const ProtectedRoute = ({
     );
 
   if (!isAuthenticated) {
-    loginWithRedirect();
-    return null;
+    return <Navigate to="/login" />;
   }
   const roles: string[] = user?.["http://localhost:5173/roles"] || [];
   const hasAccess =

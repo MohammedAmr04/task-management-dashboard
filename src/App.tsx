@@ -3,7 +3,6 @@ import "./styles/global.css";
 import { Suspense, lazy } from "react";
 import { Spin } from "antd";
 import { Auth0ProviderWithNavigate } from "./services/context/AuthProvider";
-import ProtectedRoute from "./services/protectedroutes/ProtectedRoute";
 
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
 const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage"));
@@ -15,6 +14,8 @@ const ToDoPage = lazy(() => import("./pages/ToDoPage"));
 const TableView = lazy(() => import("./components/Todo/table/TableView"));
 const CardView = lazy(() => import("./components/Todo/card/CardView"));
 import Unauthorized from "./pages/Unauthorized";
+import ProtectedRoute from "./protectedroutes/ProtectedRoute";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -31,7 +32,15 @@ function App() {
       <BrowserRouter>
         <Auth0ProviderWithNavigate>
           <Routes>
-            <Route path="/" element={<MainLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route
                 path="analytics"
                 element={

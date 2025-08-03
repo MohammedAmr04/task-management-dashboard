@@ -80,7 +80,11 @@ const Header = () => {
               <>
                 {!isAuthenticated && <LoginButton />}
                 {isAuthenticated && <LogoutButton />}
-                <img src={user} alt="avatar" className="rounded-full size-8" />
+                <img
+                  src={userAuth?.picture || user}
+                  alt="avatar"
+                  className="rounded-full size-8"
+                />
                 <div className="flex flex-col text-[8px]">
                   <p>Workspace</p>
                   <p className="text-xs text-primary italic font-semibold">
